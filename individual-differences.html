@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مراعاة الفروق الفردية والتغذية الراجعة</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; color: #2d3748; direction: rtl; }
+
+/* شريط التقدم العلوي */
+.progress-bar { height: 5px; background: #e2e8f0; position: fixed; top: 0; width: 100%; z-index: 100; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #2d6a4f, #52b788); transition: width .4s; }
+
+header {
+  background: linear-gradient(135deg, #1b4332, #2d6a4f, #40916c);
+  color: white; padding: 28px 40px 22px; text-align: center;
+  margin-top: 5px;
+}
+header h1 { font-size: 24px; margin-bottom: 6px; }
+header p  { font-size: 14px; opacity: .85; }
+
+/* شريط المراحل */
+.stages { display: flex; justify-content: center; gap: 0; background: white;
+  border-bottom: 2px solid #e2e8f0; padding: 0; overflow-x: auto; }
+.stage-btn { padding: 14px 20px; border: none; background: none; cursor: pointer;
+  font-size: 13px; color: #718096; border-bottom: 3px solid transparent;
+  white-space: nowrap; transition: all .2s; font-family: inherit; }
+.stage-btn:hover { color: #2d6a4f; background: #f7fafc; }
+.stage-btn.active { color: #2d6a4f; border-bottom-color: #2d6a4f; font-weight: 600; background: #f0fff4; }
+.stage-btn .num { display: inline-block; width: 22px; height: 22px; border-radius: 50%;
+  background: #e2e8f0; color: #4a5568; font-size: 11px; font-weight: 700;
+  line-height: 22px; text-align: center; margin-left: 6px; transition: all .2s; }
+.stage-btn.active .num { background: #2d6a4f; color: white; }
+
+.container { max-width: 960px; margin: 30px auto; padding: 0 20px 60px; }
+
+/* البطاقات */
+.section { background: white; border-radius: 14px; padding: 28px 32px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.07); display: none; }
+.section.active { display: block; animation: fadeIn .3s ease; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+.section h2 { font-size: 19px; color: #1b4332; margin-bottom: 6px; }
+.section .subtitle { font-size: 13px; color: #718096; margin-bottom: 22px; border-bottom: 1px solid #f0f4f8; padding-bottom: 14px; }
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="progress-fill" id="prog" style="width:20%"></div></div>
+<a href="index.html" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#1b4332;border-bottom:1px solid #2d6a4f;font-size:13px;color:#6ee7b7;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#6ee7b7'">
+  <span style="font-size:16px;">⬡</span> البوابة الرئيسية
+  <span style="margin-right:auto;font-size:11px;background:rgba(0,0,0,.2);padding:2px 10px;border-radius:20px;">lesson-presenter</span>
+</a>
+<header>
+  <h1>🎓 مراعاة الفروق الفردية والتغذية الراجعة</h1>
+  <p>مادة المهارات الرقمية | الصف الأول المتوسط | نموذج تعليمي تفاعلي</p>
+</header>
+
+<div class="stages" id="stages">
+  <button class="stage-btn active" onclick="showSection(0)"><span class="num">1</span>المفهوم</button>
+  <button class="stage-btn" onclick="showSection(1)"><span class="num">2</span>تشخيص المستويات</button>
+  <button class="stage-btn" onclick="showSection(2)"><span class="num">3</span>التقويم المتمايز</button>
+  <button class="stage-btn" onclick="showSection(3)"><span class="num">4</span>التغذية الراجعة</button>
+  <button class="stage-btn" onclick="showSection(4)"><span class="num">5</span>تجربة الطالب</button>
+</div>
+
+<div class="container">
+
+<!-- القسم 1: المفهوم -->
+<div class="section active" id="sec0">
+  <h2>📚 ما هي الفروق الفردية؟</h2>
+  <p class="subtitle">فهم الأساس النظري قبل التطبيق في الفصل</p>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px;">
+    <div style="background:#f0fff4;border-right:4px solid #2d6a4f;border-radius:10px;padding:18px;">
+      <div style="font-size:28px;margin-bottom:8px;">🧠</div>
+      <strong style="color:#1b4332;">التعريف</strong>
+      <p style="font-size:13px;color:#4a5568;margin-top:6px;line-height:1.7;">
+        الفروق الفردية هي الاختلافات الطبيعية بين المتعلمين في القدرات المعرفية، وسرعة الاستيعاب، وأساليب التعلم المفضلة لديهم.
+      </p>
+    </div>
+    <div style="background:#fffbf0;border-right:4px solid #d69e2e;border-radius:10px;padding:18px;">
+      <div style="font-size:28px;margin-bottom:8px;">🎯</div>
+      <strong style="color:#744210;">لماذا تهمنا؟</strong>
+      <p style="font-size:13px;color:#4a5568;margin-top:6px;line-height:1.7;">
+        تجاهل الفروق الفردية يؤدي لتفوق بعض الطلاب وتراجع آخرين. مراعاتها تضمن وصول التعلم لكل طالب.
+      </p>
+    </div>
+    <div style="background:#fff5f5;border-right:4px solid #e53e3e;border-radius:10px;padding:18px;">
+      <div style="font-size:28px;margin-bottom:8px;">📊</div>
+      <strong style="color:#742a2a;">أنواع الفروق</strong>
+      <ul style="font-size:13px;color:#4a5568;margin-top:6px;line-height:2;padding-right:16px;">
+        <li>فروق في السرعة والإيقاع</li>
+        <li>فروق في أسلوب التعلم</li>
+        <li>فروق في الخلفية المعرفية</li>
+        <li>فروق في الدافعية والاهتمام</li>
+      </ul>
+    </div>
+    <div style="background:#f0f4ff;border-right:4px solid #4c51bf;border-radius:10px;padding:18px;">
+      <div style="font-size:28px;margin-bottom:8px;">✅</div>
+      <strong style="color:#3c366b;">المبدأ الأساسي</strong>
+      <p style="font-size:13px;color:#4a5568;margin-top:6px;line-height:1.7;">
+        التعليم المتمايز لا يعني تخفيض المستوى، بل تقديم نفس الهدف بمسارات متعددة تناسب كل طالب.
+      </p>
+    </div>
+  </div>
+  <div style="background:#f7fafc;border-radius:10px;padding:18px;border:1px solid #e2e8f0;">
+    <strong style="color:#2d6a4f;">💡 مثال من مادة المهارات الرقمية:</strong>
+    <p style="font-size:13px;color:#4a5568;margin-top:8px;line-height:1.8;">
+      درس "إنشاء عرض تقديمي" — الطالب المتقدم يصمم عرضاً كاملاً بانتقالات وتأثيرات، الطالب المتوسط ينشئ عرضاً بشرائح منظمة، والطالب المبتدئ يكمل قالباً جاهزاً بإضافة النصوص والصور.
+    </p>
+  </div>
+  <div style="text-align:left;margin-top:20px;">
+    <button onclick="showSection(1)" style="background:#2d6a4f;color:white;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;font-size:14px;">التالي: تشخيص المستويات ←</button>
+  </div>
+</div>
+
+<!-- القسم 2: تشخيص المستويات -->
+<div class="section" id="sec1">
+  <h2>🔍 تشخيص مستويات الطلاب</h2>
+  <p class="subtitle">قبل التمايز في التقويم، يجب معرفة مستوى كل طالب — انقر على كل طالب لترى تشخيصه</p>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;" id="students-grid">
+  </div>
+
+  <div id="student-detail" style="display:none;background:#f7fafc;border-radius:12px;padding:20px;border:2px solid #e2e8f0;margin-bottom:20px;">
+    <h3 id="detail-name" style="color:#1b4332;margin-bottom:12px;"></h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+      <div>
+        <p style="font-size:12px;color:#718096;margin-bottom:4px;">نقاط القوة</p>
+        <p id="detail-strengths" style="font-size:13px;color:#276749;background:#f0fff4;padding:8px;border-radius:6px;"></p>
+      </div>
+      <div>
+        <p style="font-size:12px;color:#718096;margin-bottom:4px;">نقاط تحتاج تطوير</p>
+        <p id="detail-weaknesses" style="font-size:13px;color:#c53030;background:#fff5f5;padding:8px;border-radius:6px;"></p>
+      </div>
+      <div>
+        <p style="font-size:12px;color:#718096;margin-bottom:4px;">أسلوب التعلم المفضل</p>
+        <p id="detail-style" style="font-size:13px;color:#2b6cb0;background:#ebf8ff;padding:8px;border-radius:6px;"></p>
+      </div>
+      <div>
+        <p style="font-size:12px;color:#718096;margin-bottom:4px;">التوصية التعليمية</p>
+        <p id="detail-reco" style="font-size:13px;color:#744210;background:#fffbeb;padding:8px;border-radius:6px;"></p>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:left;margin-top:20px;display:flex;gap:10px;justify-content:flex-end;">
+    <button onclick="showSection(0)" style="background:#e2e8f0;color:#4a5568;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;">→ السابق</button>
+    <button onclick="showSection(2)" style="background:#2d6a4f;color:white;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;font-size:14px;">التالي: التقويم المتمايز ←</button>
+  </div>
+</div>
+
+<!-- القسم 3: التقويم المتمايز -->
+<div class="section" id="sec2">
+  <h2>📝 التقويم المتمايز — نفس الهدف، مسارات مختلفة</h2>
+  <p class="subtitle">درس: إنشاء ملف Excel وإدخال البيانات | انقر على كل مستوى لترى المهمة المخصصة له</p>
+
+  <div style="display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
+    <button class="level-tab active-tab" onclick="showLevel('advanced')" id="tab-advanced"
+      style="flex:1;padding:14px;border-radius:10px;border:2px solid #276749;background:#f0fff4;cursor:pointer;font-size:14px;font-weight:600;color:#276749;">
+      🚀 المستوى المتقدم
+    </button>
+    <button class="level-tab" onclick="showLevel('middle')" id="tab-middle"
+      style="flex:1;padding:14px;border-radius:10px;border:2px solid #d69e2e;background:white;cursor:pointer;font-size:14px;font-weight:600;color:#744210;">
+      📘 المستوى المتوسط
+    </button>
+    <button class="level-tab" onclick="showLevel('basic')" id="tab-basic"
+      style="flex:1;padding:14px;border-radius:10px;border:2px solid #e53e3e;background:white;cursor:pointer;font-size:14px;font-weight:600;color:#c53030;">
+      🌱 مستوى الدعم
+    </button>
+  </div>
+
+  <div id="level-content"></div>
+
+  <div style="background:#f0f4f8;border-radius:10px;padding:16px;margin-top:20px;border:1px solid #e2e8f0;">
+    <strong style="color:#2d6a4f;font-size:14px;">⚖️ مبدأ العدالة في التقويم المتمايز:</strong>
+    <p style="font-size:13px;color:#4a5568;margin-top:8px;line-height:1.8;">
+      الهدف التعليمي واحد لجميع الطلاب (إتقان إنشاء جداول البيانات)، لكن <strong>مستوى التحدي والدعم يختلف</strong>.
+      الطالب في مستوى الدعم لا يُحكم عليه بمعيار الطالب المتقدم، بل بمدى تحقيقه لمستهدفاته الخاصة.
+    </p>
+  </div>
+
+  <div style="text-align:left;margin-top:20px;display:flex;gap:10px;justify-content:flex-end;">
+    <button onclick="showSection(1)" style="background:#e2e8f0;color:#4a5568;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;">→ السابق</button>
+    <button onclick="showSection(3)" style="background:#2d6a4f;color:white;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;font-size:14px;">التالي: التغذية الراجعة ←</button>
+  </div>
+</div>
+
+<!-- القسم 4: التغذية الراجعة -->
+<div class="section" id="sec3">
+  <h2>💬 التغذية الراجعة الفعّالة</h2>
+  <p class="subtitle">اختر نوع التغذية الراجعة المناسب لكل موقف — انقر على كل بطاقة</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px;">
+    <div class="fb-card" onclick="toggleFB(this)" style="background:white;border:2px solid #e2e8f0;border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;">
+      <div style="font-size:24px;margin-bottom:8px;">✅</div>
+      <strong style="color:#276749;">تغذية راجعة تصحيحية</strong>
+      <p style="font-size:12px;color:#718096;margin-top:4px;">للأخطاء المفاهيمية</p>
+      <div class="fb-detail" style="display:none;margin-top:12px;background:#f0fff4;border-radius:8px;padding:12px;">
+        <p style="font-size:13px;color:#276749;margin-bottom:6px;"><strong>متى تستخدمها؟</strong> عندما يرتكب الطالب خطأ في المفهوم أو الإجراء.</p>
+        <p style="font-size:13px;color:#4a5568;"><strong>مثال:</strong> "لاحظت أنك استخدمت SUM بدل AVERAGE — SUM تجمع الأرقام، أما AVERAGE فتحسب المتوسط. جرب تغيير الدالة وأخبرني بالنتيجة."</p>
+      </div>
+    </div>
+
+    <div class="fb-card" onclick="toggleFB(this)" style="background:white;border:2px solid #e2e8f0;border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;">
+      <div style="font-size:24px;margin-bottom:8px;">🌟</div>
+      <strong style="color:#b7791f;">تغذية راجعة تعزيزية</strong>
+      <p style="font-size:12px;color:#718096;margin-top:4px;">للتحفيز والبناء على النجاح</p>
+      <div class="fb-detail" style="display:none;margin-top:12px;background:#fffbeb;border-radius:8px;padding:12px;">
+        <p style="font-size:13px;color:#b7791f;margin-bottom:6px;"><strong>متى تستخدمها؟</strong> عندما يُنجز الطالب المهمة بشكل صحيح أو يُحقق تقدماً.</p>
+        <p style="font-size:13px;color:#4a5568;"><strong>مثال:</strong> "ممتاز! نسّقت الجدول باحترافية. الخطوة التالية: هل يمكنك إضافة رسم بياني يُوضح هذه البيانات؟"</p>
+      </div>
+    </div>
+
+    <div class="fb-card" onclick="toggleFB(this)" style="background:white;border:2px solid #e2e8f0;border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;">
+      <div style="font-size:24px;margin-bottom:8px;">🗺️</div>
+      <strong style="color:#2b6cb0;">تغذية راجعة توجيهية</strong>
+      <p style="font-size:12px;color:#718096;margin-top:4px;">للطلاب العالقين</p>
+      <div class="fb-detail" style="display:none;margin-top:12px;background:#ebf8ff;border-radius:8px;padding:12px;">
+        <p style="font-size:13px;color:#2b6cb0;margin-bottom:6px;"><strong>متى تستخدمها؟</strong> عندما يتوقف الطالب ولا يعرف كيف يكمل.</p>
+        <p style="font-size:13px;color:#4a5568;"><strong>مثال:</strong> "لاحظت أنك توقفت. ابدأ بسؤال نفسك: ما الذي أريد حسابه؟ ثم ابحث في قائمة الدوال عن الكلمة المناسبة. أنا هنا إذا احتجت مساعدة."</p>
+      </div>
+    </div>
+
+    <div class="fb-card" onclick="toggleFB(this)" style="background:white;border:2px solid #e2e8f0;border-radius:12px;padding:18px;cursor:pointer;transition:all .2s;">
+      <div style="font-size:24px;margin-bottom:8px;">🪞</div>
+      <strong style="color:#6b46c1;">تغذية راجعة تأملية</strong>
+      <p style="font-size:12px;color:#718096;margin-top:4px;">لتنمية التفكير الناقد</p>
+      <div class="fb-detail" style="display:none;margin-top:12px;background:#faf5ff;border-radius:8px;padding:12px;">
+        <p style="font-size:13px;color:#6b46c1;margin-bottom:6px;"><strong>متى تستخدمها؟</strong> بعد إنهاء المهمة — لتعميق الفهم وربط التعلم بالواقع.</p>
+        <p style="font-size:13px;color:#4a5568;"><strong>مثال:</strong> "أنجزت العمل. الآن تأمّل: كيف يمكن لهذا الجدول أن يساعدك في حياتك اليومية؟ هل يمكنك التفكير في استخدام عملي آخر؟"</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#f7fafc;border-radius:10px;padding:16px;border:1px solid #e2e8f0;">
+    <strong style="color:#2d6a4f;">📌 قواعد التغذية الراجعة الفعّالة:</strong>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+      <div style="font-size:13px;color:#4a5568;">✔ فورية — قدمها في وقتها</div>
+      <div style="font-size:13px;color:#4a5568;">✔ محددة — لا تكن عاماً</div>
+      <div style="font-size:13px;color:#4a5568;">✔ بنّاءة — ركز على العمل لا الشخص</div>
+      <div style="font-size:13px;color:#4a5568;">✔ قابلة للتطبيق — اقترح خطوة واضحة</div>
+    </div>
+  </div>
+
+  <div style="text-align:left;margin-top:20px;display:flex;gap:10px;justify-content:flex-end;">
+    <button onclick="showSection(2)" style="background:#e2e8f0;color:#4a5568;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;">→ السابق</button>
+    <button onclick="showSection(4)" style="background:#2d6a4f;color:white;border:none;padding:10px 28px;border-radius:8px;cursor:pointer;font-size:14px;">التالي: تجربة الطالب ←</button>
+  </div>
+</div>
+
+<!-- القسم 5: تجربة الطالب -->
+<div class="section" id="sec4">
+  <h2>🎮 جرّب بنفسك — محاكاة تجربة الطالب</h2>
+  <p class="subtitle">اختر مستوى وأجب عن السؤال — ستحصل على تغذية راجعة فورية مخصصة</p>
+
+  <div style="margin-bottom:20px;">
+    <p style="font-size:14px;color:#4a5568;margin-bottom:10px;">اختر مستواك أولاً:</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button onclick="selectLevel('advanced')" id="lvl-advanced"
+        style="padding:10px 20px;border:2px solid #276749;border-radius:8px;background:white;cursor:pointer;font-size:13px;color:#276749;font-weight:600;">
+        🚀 متقدم
+      </button>
+      <button onclick="selectLevel('middle')" id="lvl-middle"
+        style="padding:10px 20px;border:2px solid #d69e2e;border-radius:8px;background:white;cursor:pointer;font-size:13px;color:#744210;font-weight:600;">
+        📘 متوسط
+      </button>
+      <button onclick="selectLevel('basic')" id="lvl-basic"
+        style="padding:10px 20px;border:2px solid #e53e3e;border-radius:8px;background:white;cursor:pointer;font-size:13px;color:#c53030;font-weight:600;">
+        🌱 مبتدئ
+      </button>
+    </div>
+  </div>
+
+  <div id="quiz-box" style="display:none;">
+    <div style="background:#f7fafc;border-radius:12px;padding:20px;border:1px solid #e2e8f0;margin-bottom:16px;">
+      <p style="font-size:13px;color:#718096;margin-bottom:6px;">السؤال:</p>
+      <p id="q-text" style="font-size:15px;color:#2d3748;font-weight:500;line-height:1.7;"></p>
+    </div>
+    <div id="q-options" style="display:grid;gap:10px;"></div>
+    <div id="fb-box" style="display:none;margin-top:16px;border-radius:12px;padding:18px;"></div>
+    <button id="next-q-btn" onclick="nextQuestion()" style="display:none;margin-top:14px;background:#2d6a4f;color:white;border:none;padding:10px 24px;border-radius:8px;cursor:pointer;font-size:14px;">سؤال آخر ←</button>
+  </div>
+
+  <div style="background:linear-gradient(135deg,#1b4332,#2d6a4f);border-radius:12px;padding:22px;color:white;margin-top:24px;">
+    <h3 style="margin-bottom:12px;font-size:16px;">📋 ملخص للمعلم: استراتيجية الدرس الكاملة</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;">
+      <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:12px;">
+        <strong>1. قبل الدرس</strong><br>
+        <span style="opacity:.85;">تحليل بيانات مدرستي لتصنيف الطلاب مسبقاً</span>
+      </div>
+      <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:12px;">
+        <strong>2. أثناء الدرس</strong><br>
+        <span style="opacity:.85;">توزيع مهام متمايزة + مراقبة التقدم الفردي</span>
+      </div>
+      <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:12px;">
+        <strong>3. التغذية الراجعة</strong><br>
+        <span style="opacity:.85;">فورية + محددة + مناسبة لمستوى كل طالب</span>
+      </div>
+      <div style="background:rgba(255,255,255,.12);border-radius:8px;padding:12px;">
+        <strong>4. بعد الدرس</strong><br>
+        <span style="opacity:.85;">تحديث بيانات مدرستي + تقرير التقدم</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="text-align:left;margin-top:20px;">
+    <button onclick="showSection(3)" style="background:#e2e8f0;color:#4a5568;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px;">→ السابق</button>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+// --- بيانات الطلاب النموذجيين ---
+const studentsData = [
+  { name:'أحمد علي', level:'advanced', emoji:'🚀', score:9.2,
+    strengths:'سريع الاستيعاب، يحل المشكلات باستقلالية', weaknesses:'يحتاج تحديات أعلى لتجنب الملل',
+    style:'تعلم بالاستكشاف الذاتي', reco:'أعطه مهام إثرائية ومشاريع موسعة' },
+  { name:'محمد سالم', level:'middle', emoji:'📘', score:6.9,
+    strengths:'منظم ودقيق في تنفيذ التعليمات', weaknesses:'يحتاج وقتاً أطول لفهم المفاهيم',
+    style:'تعلم بالأمثلة التدريجية', reco:'قدم له أمثلة مشروحة خطوة بخطوة' },
+  { name:'خالد عمر', level:'basic', emoji:'🌱', score:3.1,
+    strengths:'حضور منتظم وإرادة للتعلم', weaknesses:'فجوات في المفاهيم الأساسية',
+    style:'تعلم بالتطبيق المباشر مع دعم', reco:'دعم فردي + مهام قصيرة ومحددة' },
+  { name:'فيصل ناصر', level:'advanced', emoji:'🚀', score:8.8,
+    strengths:'إبداعي في حل المشكلات', weaknesses:'أحياناً يتجاوز المطلوب',
+    style:'تعلم بالمشاريع والتحديات', reco:'وجّهه نحو مشاريع تجمع عدة مهارات' },
+  { name:'عبدالله حسن', level:'middle', emoji:'📘', score:7.1,
+    strengths:'متعاون مع الزملاء', weaknesses:'يتأثر بالتشتت أثناء العمل الفردي',
+    style:'تعلم تعاوني في مجموعات', reco:'ضعه في مجموعات مدروسة مع توجيه' },
+  { name:'يوسف أحمد', level:'basic', emoji:'🌱', score:2.0,
+    strengths:'يستجيب جيداً للتشجيع', weaknesses:'ثقة منخفضة بالنفس + فجوات معرفية',
+    style:'تعلم بالدعم التدريجي والتعزيز', reco:'ابدأ من نقطة نجاحه وابنِ عليها' },
+];
+
+const levelContent = {
+  advanced: {
+    color:'#276749', bg:'#f0fff4', border:'#276749',
+    title:'🚀 مهمة الطالب المتقدم',
+    task:'إنشاء جدول بيانات متكامل لرصد درجات 5 مواد دراسية لمدة فصل كامل، مع: حساب المتوسط والمجموع والترتيب تلقائياً، إضافة تنسيق شرطي (أحمر للراسب، أخضر للمتفوق)، وإنشاء رسم بياني مقارن.',
+    skills:['دوال AVERAGE, SUM, RANK', 'التنسيق الشرطي', 'الرسم البياني', 'ربط الأوراق'],
+    time:'45 دقيقة', support:'يعمل باستقلالية كاملة'
+  },
+  middle: {
+    color:'#744210', bg:'#fffbeb', border:'#d69e2e',
+    title:'📘 مهمة الطالب المتوسط',
+    task:'إنشاء جدول بيانات لثلاث مواد دراسية لفصل واحد، مع: إدخال الدرجات، حساب المجموع والمتوسط باستخدام الدوال، وإضافة تنسيق بسيط للجدول.',
+    skills:['دوال SUM و AVERAGE', 'تنسيق الخلايا الأساسي', 'إدخال البيانات بدقة'],
+    time:'45 دقيقة', support:'مثال محلول أمامه للمرجعية'
+  },
+  basic: {
+    color:'#742a2a', bg:'#fff5f5', border:'#e53e3e',
+    title:'🌱 مهمة مستوى الدعم',
+    task:'إكمال جدول جاهز بإدخال درجات مادتين، واستخدام دالة SUM بمساعدة المعلم، مع التحقق من دقة الأرقام.',
+    skills:['إدخال البيانات في الخلايا', 'دالة SUM بشكل مُوجَّه', 'التنقل بين الخلايا'],
+    time:'45 دقيقة', support:'قالب جاهز + شرح مصور خطوة بخطوة'
+  }
+};
+
+const quizData = {
+  advanced: [
+    { q:'ما الدالة الصحيحة لحساب رتبة الطالب بين زملائه تنازلياً في Excel؟',
+      options:['=RANK(A2,A$2:A$30,0)','=SORT(A2,A$2:A$30)','=ORDER(A2,A$2:A$30,0)','=INDEX(A2,A$2:A$30)'],
+      correct:0,
+      fb:{ right:'✅ ممتاز! RANK مع الوسيط 0 ترتّب تنازلياً. الآن جرب إضافة التنسيق الشرطي ليتحول لون الخلية تلقائياً حسب الرتبة.',
+           wrong:'💡 الدالة الصحيحة هي RANK. الصيغة: =RANK(قيمة, النطاق, 0) — الصفر يعني ترتيباً تنازلياً (الأعلى = الرقم 1).' } },
+    { q:'أنشأت جدولاً وأريد تلوين أي خلية أقل من 50 باللون الأحمر تلقائياً. ما الأداة المناسبة؟',
+      options:['التنسيق الشرطي','تنسيق الخلايا','الفرز والتصفية','المخطط البياني'],
+      correct:0,
+      fb:{ right:'✅ صحيح تماماً! التنسيق الشرطي أداة احترافية. المسار: الصفحة الرئيسية ← التنسيق الشرطي ← قواعد تمييز الخلايا.',
+           wrong:'💡 "التنسيق الشرطي" هو الحل. يتيح لك وضع قواعد: إذا كانت الخلية < 50، لوّنها أحمر. جرب إيجاده في تبويب الصفحة الرئيسية.' } }
+  ],
+  middle: [
+    { q:'لديك أرقام في الخلايا B2 حتى B6 وتريد جمعها. ما الصيغة الصحيحة؟',
+      options:['=SUM(B2:B6)','=ADD(B2,B6)','=B2+B3+B4+B5+B6','=TOTAL(B2:B6)'],
+      correct:0,
+      fb:{ right:'✅ أحسنت! =SUM(B2:B6) هي الطريقة الاحترافية. النقطتان ":" تعنيان "من B2 إلى B6". هل يمكنك الآن إيجاد دالة AVERAGE بنفس المنطق؟',
+           wrong:'💡 الصيغة الصحيحة: =SUM(B2:B6). يمكنك أيضاً كتابها يدوياً بالجمع، لكن SUM أسرع وأدق مع أرقام كثيرة.' } },
+    { q:'أريد حساب متوسط درجات الطلاب في الخلايا C2:C20. ما الصيغة؟',
+      options:['=AVERAGE(C2:C20)','=MEAN(C2:C20)','=SUM(C2:C20)/20','=AVG(C2:C20)'],
+      correct:0,
+      fb:{ right:'✅ ممتاز! AVERAGE هي الدالة الصحيحة. لاحظ أن SUM/20 قد تعطي نتيجة خاطئة لو كانت بعض الخلايا فارغة.',
+           wrong:'💡 الدالة الصحيحة هي AVERAGE. تكتبها مثل SUM تماماً: =AVERAGE(C2:C20). Excel يحسب المتوسط تلقائياً.' } }
+  ],
+  basic: [
+    { q:'أنت في خلية A1 وتريد الانتقال للخلية التالية في نفس العمود. ماذا تضغط؟',
+      options:['مفتاح Enter','مفتاح Tab','Ctrl+C','Escape'],
+      correct:0,
+      fb:{ right:'✅ صح! Enter ينقلك للخلية التالية لأسفل. أما Tab فيحرك للخلية التالية على اليمين. جرب الاثنين!',
+           wrong:'💡 اضغط Enter للانتقال للأسفل. Tab للانتقال لليمين. جرب ذلك الآن في الملف المفتوح أمامك.' } },
+    { q:'ما معنى الرمز # في خلية Excel؟',
+      options:['العمود ضيق لعرض الرقم','الرقم خاطئ','الصيغة فيها خطأ','الخلية فارغة'],
+      correct:0,
+      fb:{ right:'✅ ممتاز! الحل بسيط: ضع مؤشر الفأرة على حافة العمود حتى يتحول لسهمين، ثم اسحب لتوسيعه.',
+           wrong:'💡 الرمز # يعني العمود ضيق. لإصلاحه: ضع المؤشر على الخط بين العمودين في الرأس حتى يتحول لسهمين، ثم اسحب.' } }
+  ]
+};
+
+let currentLevel = null;
+let currentQIndex = 0;
+let answered = false;
+
+function showSection(i) {
+  document.querySelectorAll('.section').forEach((s,idx)=>{ s.classList.toggle('active', idx===i); });
+  document.querySelectorAll('.stage-btn').forEach((b,idx)=>{ b.classList.toggle('active', idx===i); });
+  const pct = Math.round(((i+1)/5)*100);
+  document.getElementById('prog').style.width = pct + '%';
+  window.scrollTo({top:0, behavior:'smooth'});
+  if (i===1) renderStudentsGrid();
+  if (i===2) showLevel('advanced');
+}
+
+function renderStudentsGrid() {
+  const grid = document.getElementById('students-grid');
+  grid.innerHTML = studentsData.map((s,i) => {
+    const bg = s.level==='advanced'?'#f0fff4': s.level==='middle'?'#fffbeb':'#fff5f5';
+    const bc = s.level==='advanced'?'#276749': s.level==='middle'?'#d69e2e':'#e53e3e';
+    const sc = s.level==='advanced'?'#22543d': s.level==='middle'?'#744210':'#742a2a';
+    const barW = Math.round((s.score/10)*100);
+    const barC = s.score>=7?'#48bb78':s.score>=5?'#ecc94b':'#fc8181';
+    return `<div onclick="showStudentDetail(${i})" style="background:${bg};border:2px solid ${bc};border-radius:12px;padding:16px;cursor:pointer;transition:all .2s;" onmouseover="this.style.transform='scale(1.02)'" onmouseout="this.style.transform='scale(1)'">
+      <div style="font-size:24px;">${s.emoji}</div>
+      <strong style="color:${sc};font-size:14px;">${s.name}</strong>
+      <p style="font-size:11px;color:#718096;margin:4px 0;">درجة: ${s.score}</p>
+      <div style="background:#e2e8f0;border-radius:4px;height:6px;overflow:hidden;">
+        <div style="width:${barW}%;height:100%;background:${barC};border-radius:4px;"></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function showStudentDetail(i) {
+  const s = studentsData[i];
+  document.getElementById('detail-name').textContent = s.emoji + ' ' + s.name;
+  document.getElementById('detail-strengths').textContent = s.strengths;
+  document.getElementById('detail-weaknesses').textContent = s.weaknesses;
+  document.getElementById('detail-style').textContent = s.style;
+  document.getElementById('detail-reco').textContent = s.reco;
+  document.getElementById('student-detail').style.display = 'block';
+  document.getElementById('student-detail').scrollIntoView({behavior:'smooth', block:'nearest'});
+}
+
+function showLevel(level) {
+  const d = levelContent[level];
+  document.querySelectorAll('.level-tab').forEach(t => {
+    t.style.background = 'white'; t.style.fontWeight = '600';
+  });
+  const tab = document.getElementById('tab-'+level);
+  if (tab) { tab.style.background = d.bg; }
+  document.getElementById('level-content').innerHTML = `
+    <div style="background:${d.bg};border:2px solid ${d.border};border-radius:12px;padding:22px;">
+      <h3 style="color:${d.color};margin-bottom:12px;">${d.title}</h3>
+      <p style="font-size:14px;color:#4a5568;line-height:1.8;margin-bottom:16px;">${d.task}</p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        ${d.skills.map(s=>`<span style="background:rgba(0,0,0,.07);padding:4px 12px;border-radius:20px;font-size:12px;color:${d.color};">${s}</span>`).join('')}
+      </div>
+      <div style="display:flex;gap:16px;font-size:13px;">
+        <span style="color:#718096;">⏱ ${d.time}</span>
+        <span style="color:${d.color};">🛟 ${d.support}</span>
+      </div>
+    </div>`;
+}
+
+function toggleFB(el) {
+  const detail = el.querySelector('.fb-detail');
+  const isOpen = detail.style.display === 'block';
+  detail.style.display = isOpen ? 'none' : 'block';
+  el.style.borderColor = isOpen ? '#e2e8f0' : '#2d6a4f';
+}
+
+function selectLevel(level) {
+  currentLevel = level;
+  currentQIndex = 0;
+  answered = false;
+  ['advanced','middle','basic'].forEach(l => {
+    const btn = document.getElementById('lvl-'+l);
+    btn.style.background = l===level ? (l==='advanced'?'#f0fff4':l==='middle'?'#fffbeb':'#fff5f5') : 'white';
+    btn.style.fontWeight = l===level ? '700' : '600';
+  });
+  document.getElementById('quiz-box').style.display = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = quizData[currentLevel][currentQIndex];
+  document.getElementById('q-text').textContent = q.q;
+  document.getElementById('fb-box').style.display = 'none';
+  document.getElementById('next-q-btn').style.display = 'none';
+  document.getElementById('q-options').innerHTML = q.options.map((opt,i)=>
+    `<button onclick="checkAnswer(${i})" style="width:100%;text-align:right;padding:12px 16px;border:2px solid #e2e8f0;border-radius:8px;background:white;cursor:pointer;font-size:14px;font-family:inherit;transition:all .2s;" onmouseover="if(!this.disabled)this.style.borderColor='#40916c'" onmouseout="if(!this.disabled)this.style.borderColor='#e2e8f0'">${opt}</button>`
+  ).join('');
+}
+
+function checkAnswer(i) {
+  if (answered) return;
+  answered = true;
+  const q = quizData[currentLevel][currentQIndex];
+  const btns = document.querySelectorAll('#q-options button');
+  btns.forEach(b => b.disabled = true);
+  const isRight = i === q.correct;
+  btns[q.correct].style.background = '#f0fff4';
+  btns[q.correct].style.borderColor = '#276749';
+  if (!isRight) { btns[i].style.background = '#fff5f5'; btns[i].style.borderColor = '#e53e3e'; }
+  const fb = document.getElementById('fb-box');
+  fb.style.display = 'block';
+  fb.style.background = isRight ? '#f0fff4' : '#fffbeb';
+  fb.style.border = `2px solid ${isRight?'#276749':'#d69e2e'}`;
+  fb.innerHTML = `<p style="font-size:14px;color:${isRight?'#276749':'#744210'};line-height:1.8;">${isRight?q.fb.right:q.fb.wrong}</p>`;
+  const hasNext = currentQIndex < quizData[currentLevel].length - 1;
+  const nextBtn = document.getElementById('next-q-btn');
+  nextBtn.style.display = 'inline-block';
+  nextBtn.textContent = hasNext ? 'سؤال آخر ←' : '🔄 إعادة المحاولة';
+}
+
+function nextQuestion() {
+  if (currentQIndex < quizData[currentLevel].length - 1) {
+    currentQIndex++;
+  } else {
+    currentQIndex = 0;
+  }
+  renderQuestion();
+}
+
+// تهيئة
+showLevel('advanced');
+</script>
+</body>
+</html>
