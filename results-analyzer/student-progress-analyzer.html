@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>محلل تقدم الطلاب - المهارات الرقمية</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; color: #2d3748; direction: rtl; }
+  header { background: linear-gradient(135deg, #2d6a4f, #40916c); color: white; padding: 20px 30px; }
+  header h1 { font-size: 22px; margin-bottom: 4px; }
+  header p  { font-size: 13px; opacity: 0.85; }
+  .container { max-width: 1200px; margin: 24px auto; padding: 0 20px; }
+
+  /* بطاقات الإحصاء */
+  .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+  .stat-card { background: white; border-radius: 12px; padding: 16px 20px; box-shadow: 0 2px 8px rgba(0,0,0,.07); text-align: center; }
+  .stat-card .val { font-size: 28px; font-weight: 700; }
+  .stat-card .lbl { font-size: 12px; color: #718096; margin-top: 4px; }
+  .stat-card.green .val { color: #276749; }
+  .stat-card.amber .val { color: #b7791f; }
+  .stat-card.red   .val { color: #c53030; }
+  .stat-card.blue  .val { color: #2b6cb0; }
+
+  /* قسم الإدخال */
+  .input-section { background: white; border-radius: 12px; padding: 20px 24px; margin-bottom: 24px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+  .input-section h2 { font-size: 16px; color: #2d6a4f; margin-bottom: 14px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+  .paste-area { width: 100%; min-height: 120px; border: 2px dashed #cbd5e0; border-radius: 8px; padding: 12px; font-size: 13px; font-family: monospace; resize: vertical; direction: ltr; }
+  .paste-area:focus { outline: none; border-color: #40916c; }
+  .hint { font-size: 12px; color: #a0aec0; margin-top: 6px; }
+  .btn { background: #2d6a4f; color: white; border: none; padding: 10px 24px; border-radius: 8px; cursor: pointer; font-size: 14px; margin-top: 12px; }
+  .btn:hover { background: #1b4332; }
+  .btn-secondary { background: #e2e8f0; color: #4a5568; margin-right: 8px; }
+  .btn-secondary:hover { background: #cbd5e0; }
+
+  /* جدول النتائج */
+  .table-section { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,.07); margin-bottom: 24px; }
+  .table-section h2 { font-size: 16px; color: #2d6a4f; margin-bottom: 14px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #f7fafc; padding: 10px 12px; text-align: right; color: #4a5568; font-weight: 600; border-bottom: 2px solid #e2e8f0; white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid #f0f4f8; }
+  tr:hover td { background: #f7fafc; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-green  { background: #c6f6d5; color: #22543d; }
+  .badge-amber  { background: #fefcbf; color: #744210; }
+  .badge-red    { background: #fed7d7; color: #742a2a; }
+  .badge-gray   { background: #e2e8f0; color: #4a5568; }
+
+  /* شريط التقدم */
+  .bar-bg { background: #e2e8f0; border-radius: 6px; height: 8px; overflow: hidden; min-width: 80px; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width .4s; }
+
+  /* قسم التوصيات */
+  .reco-section { background: white; border-radius: 12px; padding: 20px 24px; box-shadow: 0 2px 8px rgba(0,0,0,.07); }
+  .reco-section h2 { font-size: 16px; color: #2d6a4f; margin-bottom: 14px; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px; }
+  .reco-group { margin-bottom: 16px; }
+  .reco-group h3 { font-size: 14px; font-weight: 600; margin-bottom: 8px; }
+  .student-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip { padding: 4px 12px; border-radius: 20px; font-size: 12px; }
+  .chip-red   { background: #fed7d7; color: #742a2a; }
+  .chip-amber { background: #fefcbf; color: #744210; }
+  .chip-green { background: #c6f6d5; color: #22543d; }
+
+  .empty-state { text-align: center; padding: 40px; color: #a0aec0; }
+  .empty-state svg { margin-bottom: 12px; }
+
+  @media print { .input-section, .btn { display: none; } }
+</style>
+</head>
+<body>
+<a href="../index.html" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#1a365d;border-bottom:1px solid #2a4a7f;font-size:13px;color:#90cdf4;text-decoration:none;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#90cdf4'">
+  <span>⬡</span> البوابة الرئيسية
+  <span style="margin-right:auto;font-size:11px;background:rgba(0,0,0,.2);padding:2px 10px;border-radius:20px;">lesson-presenter</span>
+</a>
+<header>
+  <h1>📊 محلل تقدم الطلاب — سجل الواجبات</h1>
+  <p>الصف الأول المتوسط | المهارات الرقمية | مدرستي</p>
+</header>
+
+<div class="container">
+
+  <!-- بطاقات الإحصاء -->
+  <div class="stats-grid">
+    <div class="stat-card blue"><div class="val" id="total-students">-</div><div class="lbl">إجمالي الطلاب</div></div>
+    <div class="stat-card green"><div class="val" id="avg-score">-</div><div class="lbl">متوسط الدرجات</div></div>
+    <div class="stat-card amber"><div class="val" id="needs-support">-</div><div class="lbl">يحتاج دعم</div></div>
+    <div class="stat-card red"><div class="val" id="not-submitted">-</div><div class="lbl">لم يسلّم واجبات</div></div>
+  </div>
+
+  <!-- إدخال البيانات -->
+  <div class="input-section">
+    <h2>📋 إدخال البيانات</h2>
+    <p style="font-size:13px;color:#718096;margin-bottom:10px;">انسخ الجدول من صفحة مدرستي (Ctrl+A ثم Ctrl+C) والصقه هنا، أو أدخل البيانات يدوياً بالصيغة: <code>اسم الطالب | درسة | واجب1 | واجب2 | ... | المجموع</code></p>
+    <textarea class="paste-area" id="data-input" placeholder="الصق بيانات الطلاب هنا...&#10;مثال:&#10;أحمد علي العيسي | 5.00 | 3.00 | 2.00 | 0 | لم يبدأ | لم يصحح | 7.69&#10;محمد سالم الشهري | 4.00 | 4.00 | 4.00 | 4.00 | 0 | 0 | 9.23"></textarea>
+    <p class="hint">💡 يمكنك أيضاً إدخال الأرقام فقط مفصولة بمسافة أو فاصلة لكل طالب</p>
+    <div style="margin-top:12px;">
+      <button class="btn" onclick="analyzeData()">🔍 تحليل البيانات</button>
+      <button class="btn btn-secondary" onclick="loadSample()">📌 بيانات تجريبية</button>
+      <button class="btn btn-secondary" onclick="window.print()">🖨️ طباعة PDF</button>
+      <button class="btn btn-secondary" onclick="exportCSV()">📥 تصدير CSV</button>
+      <button class="btn btn-secondary" onclick="exportExcel()">📊 تصدير Excel</button>
+    </div>
+  </div>
+
+  <!-- جدول النتائج -->
+  <div class="table-section">
+    <h2>
+      <span>📝 تفاصيل الطلاب</span>
+      <span style="font-size:12px;color:#718096;" id="sort-hint">مرتبة تصاعدياً حسب الدرجة</span>
+    </h2>
+    <div id="table-container">
+      <div class="empty-state">
+        <div style="font-size:40px;margin-bottom:8px;">📂</div>
+        <p>أدخل بيانات الطلاب أعلاه وانقر "تحليل البيانات"</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- التوصيات -->
+  <div class="reco-section" id="reco-section" style="display:none;">
+    <h2>💡 التوصيات والتدخل المبكر</h2>
+    <div class="reco-group">
+      <h3 style="color:#c53030;">🔴 يحتاجون تدخلاً فورياً (أقل من 5)</h3>
+      <div class="student-chips" id="chips-red"></div>
+    </div>
+    <div class="reco-group">
+      <h3 style="color:#b7791f;">🟡 يحتاجون متابعة (5 - 7)</h3>
+      <div class="student-chips" id="chips-amber"></div>
+    </div>
+    <div class="reco-group">
+      <h3 style="color:#276749;">🟢 أداء جيد (7 فأكثر)</h3>
+      <div class="student-chips" id="chips-green"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let students = [];
+
+function loadSample() {
+  document.getElementById('data-input').value =
+`أحمد علي العيسي | 5.00 | 3.00 | 2.00 | 0 | لم يبدأ | لم يصحح | 7.69
+أحمد نايف الزهراني | 5.00 | 2.00 | 0 | 0 | لم يبدأ | لم يصحح | 5.38
+اسماعيل جبران الصامطي | 0 | 0 | 0 | 0 | لم يبدأ | لم يصحح | 0
+الحسين محمد الفتح | 3.00 | 4.00 | 3.00 | 0 | لم يبدأ | لم يصحح | 7.69
+الوليد ابراهيم معشي | 0 | 0 | 0 | 0 | لم يبدأ | لم يصحح | 0
+انس عبدالهادي الشهري | 5.00 | 4.00 | 0 | 0 | لم يبدأ | لم يصحح | 6.92
+اياد حسن السهيلي | 4.00 | 4.00 | 0 | 0 | لم يبدأ | لم يصحح | 6.15
+اياد محمد القرني | 4.00 | 4.00 | 4.00 | 4.00 | لم يبدأ | لم يصحح | 9.23
+بدر يحي فقيهي | 4.00 | 4.00 | 0 | 0 | لم يبدأ | لم يصحح | 6.15
+بندر نايف بالعبيد | 4.00 | 2.00 | 0 | 0 | لم يبدأ | لم يصحح | 4.62`;
+  analyzeData();
+}
+</script>
+
+<script>
+// تابع السكريبت
+function parseScore(val) {
+  if (!val) return 0;
+  const s = val.toString().trim();
+  if (s.includes('لم') || s === '') return 0;
+  const n = parseFloat(s);
+  return isNaN(n) ? 0 : n;
+}
+
+function analyzeData() {
+  const raw = document.getElementById('data-input').value.trim();
+  if (!raw) { alert('الرجاء إدخال بيانات الطلاب أولاً'); return; }
+
+  students = [];
+  const lines = raw.split('\n').filter(l => l.trim());
+
+  lines.forEach(line => {
+    const parts = line.split(/[|\t,،]/).map(p => p.trim());
+    if (parts.length < 2) return;
+    const name = parts[0];
+    const scores = parts.slice(1).map(parseScore);
+    const total = parseScore(parts[parts.length - 1]);
+    const hw = scores.slice(0, scores.length - 1);
+    const submitted = hw.filter(s => s > 0).length;
+    students.push({ name, hw, total, submitted, totalHw: hw.length });
+  });
+
+  if (students.length === 0) { alert('لم يتم التعرف على البيانات. تأكد من الصيغة.'); return; }
+
+  renderStats();
+  renderTable();
+  renderRecos();
+}
+
+function renderStats() {
+  const n = students.length;
+  const avg = students.reduce((s, st) => s + st.total, 0) / n;
+  const needsSupport = students.filter(s => s.total < 7).length;
+  const notSubmitted = students.filter(s => s.submitted === 0).length;
+
+  document.getElementById('total-students').textContent = n;
+  document.getElementById('avg-score').textContent = avg.toFixed(1);
+  document.getElementById('needs-support').textContent = needsSupport;
+  document.getElementById('not-submitted').textContent = notSubmitted;
+}
+
+function getExportData() {
+  if (students.length === 0) { alert('لا توجد بيانات للتصدير. قم بتحليل البيانات أولاً.'); return null; }
+  const sorted = [...students].sort((a, b) => a.total - b.total);
+  return sorted.map((st, i) => {
+    const cat = getCategory(st.total);
+    const pct = st.totalHw > 0 ? Math.round((st.submitted / st.totalHw) * 100) : 0;
+    return {
+      'م': i + 1,
+      'اسم الطالب': st.name,
+      'الواجبات المسلّمة': st.submitted,
+      'إجمالي الواجبات': st.totalHw,
+      'نسبة الإنجاز %': pct,
+      'المجموع الموزون': st.total.toFixed(2),
+      'التصنيف': cat.label
+    };
+  });
+}
+
+function exportCSV() {
+  const data = getExportData();
+  if (!data) return;
+  const headers = Object.keys(data[0]);
+  const rows = data.map(r => headers.map(h => `"${r[h]}"`).join(','));
+  const csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  const date = new Date().toISOString().split('T')[0];
+  a.download = `تقرير_الطلاب_${date}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function exportExcel() {
+  const data = getExportData();
+  if (!data) return;
+  const ws = XLSX.utils.json_to_sheet(data, { header: Object.keys(data[0]) });
+
+  // تنسيق عرض الأعمدة
+  ws['!cols'] = [
+    { wch: 4 }, { wch: 28 }, { wch: 16 }, { wch: 16 },
+    { wch: 14 }, { wch: 16 }, { wch: 12 }
+  ];
+
+  // تلوين خلايا التصنيف
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let R = 1; R <= range.e.r; R++) {
+    const cellRef = XLSX.utils.encode_cell({ r: R, c: 6 });
+    const scoreRef = XLSX.utils.encode_cell({ r: R, c: 5 });
+    if (!ws[cellRef]) continue;
+    const score = parseFloat(ws[scoreRef]?.v || 0);
+    ws[cellRef].s = {
+      fill: { fgColor: { rgb: score >= 7 ? 'C6F6D5' : score >= 5 ? 'FEFCBF' : 'FED7D7' } },
+      font: { bold: true, color: { rgb: score >= 7 ? '22543D' : score >= 5 ? '744210' : '742A2A' } },
+      alignment: { horizontal: 'center' }
+    };
+  }
+
+  // تنسيق صف الرأس
+  for (let C = 0; C <= 6; C++) {
+    const cellRef = XLSX.utils.encode_cell({ r: 0, c: C });
+    if (ws[cellRef]) {
+      ws[cellRef].s = {
+        fill: { fgColor: { rgb: '2D6A4F' } },
+        font: { bold: true, color: { rgb: 'FFFFFF' } },
+        alignment: { horizontal: 'center' }
+      };
+    }
+  }
+
+  // إضافة ورقة الملخص
+  const n = students.length;
+  const avg = (students.reduce((s, st) => s + st.total, 0) / n).toFixed(2);
+  const needsSupport = students.filter(s => s.total < 7).length;
+  const excellent = students.filter(s => s.total >= 9).length;
+  const notSubmitted = students.filter(s => s.submitted === 0).length;
+  const summaryData = [
+    { 'البيان': 'إجمالي الطلاب', 'القيمة': n },
+    { 'البيان': 'متوسط الدرجات', 'القيمة': avg },
+    { 'البيان': 'ممتاز (9 فأكثر)', 'القيمة': excellent },
+    { 'البيان': 'يحتاج دعم (أقل من 7)', 'القيمة': needsSupport },
+    { 'البيان': 'لم يسلّم واجبات', 'القيمة': notSubmitted },
+    { 'البيان': 'تاريخ التقرير', 'القيمة': new Date().toLocaleDateString('ar-SA') },
+  ];
+  const ws2 = XLSX.utils.json_to_sheet(summaryData);
+  ws2['!cols'] = [{ wch: 24 }, { wch: 16 }];
+
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws2, 'الملخص');
+  XLSX.utils.book_append_sheet(wb, ws, 'تفاصيل الطلاب');
+
+  const date = new Date().toISOString().split('T')[0];
+  XLSX.writeFile(wb, `تقرير_الطلاب_${date}.xlsx`);
+}
+
+  if (score >= 9)  return { label: 'ممتاز',    cls: 'badge-green' };
+  if (score >= 7)  return { label: 'جيد جداً', cls: 'badge-green' };
+  if (score >= 5)  return { label: 'متوسط',    cls: 'badge-amber' };
+  if (score > 0)   return { label: 'ضعيف',     cls: 'badge-red'   };
+  return           { label: 'لم يشارك',        cls: 'badge-gray'  };
+}
+
+function getBarColor(score) {
+  if (score >= 7) return '#48bb78';
+  if (score >= 5) return '#ecc94b';
+  return '#fc8181';
+}
+
+function renderTable() {
+  const sorted = [...students].sort((a, b) => a.total - b.total);
+  let html = `<table>
+    <thead><tr>
+      <th>#</th><th>اسم الطالب</th><th>الواجبات المسلّمة</th>
+      <th>نسبة الإنجاز</th><th>المجموع الموزون</th><th>التصنيف</th>
+    </tr></thead><tbody>`;
+
+  sorted.forEach((st, i) => {
+    const cat = getCategory(st.total);
+    const pct = st.totalHw > 0 ? Math.round((st.submitted / st.totalHw) * 100) : 0;
+    const barColor = getBarColor(st.total);
+    const maxScore = 10;
+    const barWidth = Math.min(100, Math.round((st.total / maxScore) * 100));
+    html += `<tr>
+      <td style="color:#a0aec0;font-size:12px;">${i + 1}</td>
+      <td><strong>${st.name}</strong></td>
+      <td style="text-align:center;">${st.submitted} / ${st.totalHw}</td>
+      <td>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="bar-bg" style="flex:1;">
+            <div class="bar-fill" style="width:${pct}%;background:${barColor};"></div>
+          </div>
+          <span style="font-size:12px;color:#718096;min-width:32px;">${pct}%</span>
+        </div>
+      </td>
+      <td><strong style="font-size:15px;">${st.total.toFixed(2)}</strong></td>
+      <td><span class="badge ${cat.cls}">${cat.label}</span></td>
+    </tr>`;
+  });
+
+  html += '</tbody></table>';
+  document.getElementById('table-container').innerHTML = html;
+}
+
+function renderRecos() {
+  const red   = students.filter(s => s.total < 5);
+  const amber = students.filter(s => s.total >= 5 && s.total < 7);
+  const green = students.filter(s => s.total >= 7);
+
+  const makeChips = (arr, cls) =>
+    arr.map(s => `<span class="chip ${cls}">${s.name} (${s.total.toFixed(1)})</span>`).join('');
+
+  document.getElementById('chips-red').innerHTML   = red.length   ? makeChips(red,   'chip-red')   : '<span style="color:#a0aec0;font-size:13px;">لا يوجد</span>';
+  document.getElementById('chips-amber').innerHTML = amber.length ? makeChips(amber, 'chip-amber') : '<span style="color:#a0aec0;font-size:13px;">لا يوجد</span>';
+  document.getElementById('chips-green').innerHTML = green.length ? makeChips(green, 'chip-green') : '<span style="color:#a0aec0;font-size:13px;">لا يوجد</span>';
+
+  document.getElementById('reco-section').style.display = 'block';
+}
+</script>
+</body>
+</html>

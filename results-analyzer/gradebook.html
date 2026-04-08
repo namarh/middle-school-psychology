@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>كشف متابعة | المعلم يحيى الشمراني</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f4f8; color: #2d3748; direction: rtl; }
+
+/* الترويسة */
+.header {
+  background: linear-gradient(135deg, #1a365d, #2b6cb0, #3182ce);
+  color: white; padding: 24px 40px; position: relative; overflow: hidden;
+}
+.header::before {
+  content: ''; position: absolute; top: -40px; left: -40px;
+  width: 200px; height: 200px; border-radius: 50%;
+  background: rgba(255,255,255,.06);
+}
+.header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+.header-logo { text-align: left; }
+.header-logo .ministry { font-size: 11px; opacity: .8; letter-spacing: 1px; }
+.header-logo .logo-icon { font-size: 32px; margin-top: 4px; }
+.header-title { text-align: center; flex: 1; }
+.header-title h1 { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+.header-title p  { font-size: 13px; opacity: .85; }
+.header-meta { display: flex; gap: 24px; margin-top: 18px; flex-wrap: wrap; justify-content: center; }
+.meta-item { background: rgba(255,255,255,.15); border-radius: 8px; padding: 8px 16px; font-size: 13px; text-align: center; }
+.meta-item .lbl { font-size: 11px; opacity: .75; margin-bottom: 2px; }
+.meta-item .val { font-weight: 600; }
+
+.container { max-width: 1100px; margin: 24px auto; padding: 0 20px 60px; }
+
+/* بطاقات الإحصاء */
+.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 24px; }
+.stat { background: white; border-radius: 12px; padding: 18px; text-align: center;
+  box-shadow: 0 2px 10px rgba(0,0,0,.07); border-top: 4px solid; }
+.stat.blue  { border-color: #3182ce; }
+.stat.green { border-color: #38a169; }
+.stat.amber { border-color: #d69e2e; }
+.stat.red   { border-color: #e53e3e; }
+.stat .val  { font-size: 30px; font-weight: 700; margin-bottom: 4px; }
+.stat.blue  .val { color: #2b6cb0; }
+.stat.green .val { color: #276749; }
+.stat.amber .val { color: #744210; }
+.stat.red   .val { color: #742a2a; }
+.stat .lbl  { font-size: 12px; color: #718096; }
+
+/* توزيع التقديرات */
+.dist-section { background: white; border-radius: 12px; padding: 22px 28px;
+  margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+.dist-section h2 { font-size: 16px; color: #1a365d; margin-bottom: 18px;
+  border-bottom: 2px solid #ebf4ff; padding-bottom: 10px; }
+.dist-bars { display: flex; gap: 12px; align-items: flex-end; justify-content: center; height: 120px; }
+.dist-bar-wrap { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; max-width: 160px; }
+.dist-bar { width: 100%; border-radius: 8px 8px 0 0; display: flex; align-items: flex-start;
+  justify-content: center; padding-top: 6px; color: white; font-weight: 700; font-size: 18px;
+  transition: all .3s; min-height: 20px; }
+.dist-label { font-size: 12px; color: #718096; text-align: center; }
+.dist-count { font-size: 11px; color: #a0aec0; }
+
+/* أدوات */
+.toolbar { display: flex; gap: 10px; margin-bottom: 18px; flex-wrap: wrap; align-items: center; }
+.toolbar input { flex: 1; min-width: 200px; padding: 9px 14px; border: 1px solid #e2e8f0;
+  border-radius: 8px; font-size: 13px; font-family: inherit; }
+.toolbar input:focus { outline: none; border-color: #3182ce; }
+.btn { padding: 9px 20px; border: none; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-family: inherit; font-weight: 600; transition: all .2s; }
+.btn-primary { background: #2b6cb0; color: white; }
+.btn-primary:hover { background: #1a365d; }
+.btn-green { background: #276749; color: white; }
+.btn-green:hover { background: #1c4532; }
+.btn-gray { background: #e2e8f0; color: #4a5568; }
+.btn-gray:hover { background: #cbd5e0; }
+
+/* فلتر التقدير */
+.filter-btns { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.filter-btn { padding: 6px 14px; border-radius: 20px; border: 2px solid; font-size: 12px;
+  cursor: pointer; font-weight: 600; background: white; transition: all .2s; font-family: inherit; }
+.filter-btn.all    { border-color: #3182ce; color: #2b6cb0; }
+.filter-btn.weak   { border-color: #e53e3e; color: #c53030; }
+.filter-btn.ok     { border-color: #d69e2e; color: #744210; }
+.filter-btn.good   { border-color: #38a169; color: #276749; }
+.filter-btn.vgood  { border-color: #3182ce; color: #2b6cb0; }
+.filter-btn.excellent { border-color: #6b46c1; color: #553c9a; }
+.filter-btn.active { color: white !important; }
+.filter-btn.all.active    { background: #3182ce; }
+.filter-btn.weak.active   { background: #e53e3e; }
+.filter-btn.ok.active     { background: #d69e2e; }
+.filter-btn.good.active   { background: #38a169; }
+.filter-btn.vgood.active  { background: #3182ce; }
+.filter-btn.excellent.active { background: #6b46c1; }
+
+/* الجدول */
+.table-wrap { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,.07); overflow: hidden; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead th { background: #1a365d; color: white; padding: 12px 14px; text-align: right;
+  font-weight: 600; white-space: nowrap; cursor: pointer; user-select: none; }
+thead th:hover { background: #2a4a7f; }
+tbody td { padding: 11px 14px; border-bottom: 1px solid #f0f4f8; }
+tbody tr:hover td { background: #ebf8ff; }
+tbody tr:last-child td { border-bottom: none; }
+.rank { color: #a0aec0; font-size: 12px; text-align: center; }
+
+/* شريط الدرجة */
+.score-cell { display: flex; align-items: center; gap: 10px; }
+.score-num  { font-size: 15px; font-weight: 700; min-width: 40px; }
+.bar-bg     { flex: 1; background: #e2e8f0; border-radius: 4px; height: 8px; overflow: hidden; }
+.bar-fill   { height: 100%; border-radius: 4px; transition: width .5s; }
+.pct        { font-size: 11px; color: #718096; min-width: 34px; text-align: left; }
+
+/* بادجات التقدير */
+.badge { padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; display: inline-block; }
+.badge-weak      { background: #fed7d7; color: #742a2a; }
+.badge-ok        { background: #fefcbf; color: #744210; }
+.badge-good      { background: #c6f6d5; color: #22543d; }
+.badge-vgood     { background: #bee3f8; color: #1a365d; }
+.badge-excellent { background: #e9d8fd; color: #44337a; }
+
+/* ملخص التدخل */
+.intervention { background: white; border-radius: 12px; padding: 22px 28px;
+  margin-top: 24px; box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+.intervention h2 { font-size: 16px; color: #1a365d; margin-bottom: 16px;
+  border-bottom: 2px solid #ebf4ff; padding-bottom: 10px; }
+.int-groups { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+.int-group  { border-radius: 10px; padding: 14px; }
+.int-group h3 { font-size: 13px; font-weight: 700; margin-bottom: 10px; }
+.int-group ul { list-style: none; }
+.int-group ul li { font-size: 12px; padding: 3px 0; border-bottom: 1px solid rgba(0,0,0,.05); }
+.int-group ul li:last-child { border: none; }
+.int-red   { background: #fff5f5; } .int-red h3   { color: #c53030; }
+.int-amber { background: #fffbeb; } .int-amber h3 { color: #744210; }
+.int-green { background: #f0fff4; } .int-green h3 { color: #276749; }
+
+@media print {
+  .toolbar, .filter-btns, .btn { display: none !important; }
+  body { background: white; }
+  .container { margin: 0; padding: 10px; }
+}
+</style>
+</head>
+<body>
+
+<a href="../index.html" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#1a365d;border-bottom:1px solid #2a4a7f;font-size:13px;color:#90cdf4;text-decoration:none;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#90cdf4'">
+  <span>⬡</span> البوابة الرئيسية
+  <span style="margin-right:auto;font-size:11px;background:rgba(0,0,0,.2);padding:2px 10px;border-radius:20px;">lesson-presenter</span>
+</a>
+<div class="header">
+  <div class="header-top">
+    <div style="width:80px;"></div>
+    <div class="header-title">
+      <h1>📋 كشف متابعة الطلاب</h1>
+      <p>تحليل درجات مادة المهارات الرقمية</p>
+    </div>
+    <div class="header-logo">
+      <div class="ministry">وزارة التعليم</div>
+      <div class="logo-icon">🏫</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="meta-item"><div class="lbl">المعلم</div><div class="val">يحيى الشمراني</div></div>
+    <div class="meta-item"><div class="lbl">المدرسة</div><div class="val">متوسطة مكة المكرمة</div></div>
+    <div class="meta-item"><div class="lbl">الصف</div><div class="val">أول (١)</div></div>
+    <div class="meta-item"><div class="lbl">المادة</div><div class="val">مهارات رقمية</div></div>
+    <div class="meta-item"><div class="lbl">التاريخ</div><div class="val">١٩ / ١٠ / ١٤٤٧</div></div>
+    <div class="meta-item"><div class="lbl">الدرجة الكاملة</div><div class="val">٦٠</div></div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- إحصاءات -->
+<div class="stats">
+  <div class="stat blue"><div class="val">28</div><div class="lbl">عدد الطلاب</div></div>
+  <div class="stat amber"><div class="val">18.64</div><div class="lbl">المتوسط الحسابي</div></div>
+  <div class="stat red"><div class="val">17.9%</div><div class="lbl">معدل النجاح</div></div>
+  <div class="stat green"><div class="val">40</div><div class="lbl">أعلى درجة</div></div>
+</div>
+
+<!-- توزيع التقديرات -->
+<div class="dist-section">
+  <h2>📊 توزيع التقديرات</h2>
+  <div class="dist-bars" id="dist-bars"></div>
+</div>
+
+<!-- أدوات البحث والتصدير -->
+<div class="toolbar">
+  <input type="text" id="search" placeholder="🔍 ابحث عن اسم طالب..." oninput="filterTable()">
+  <button class="btn btn-green" onclick="exportExcel()">📊 تصدير Excel</button>
+  <button class="btn btn-primary" onclick="exportCSV()">📥 تصدير CSV</button>
+  <button class="btn btn-gray" onclick="window.print()">🖨️ طباعة</button>
+</div>
+
+<!-- فلاتر التقدير -->
+<div class="filter-btns">
+  <button class="filter-btn all active" onclick="setFilter('all',this)">الكل (28)</button>
+  <button class="filter-btn weak"      onclick="setFilter('ضعيف',this)">ضعيف (23)</button>
+  <button class="filter-btn ok"        onclick="setFilter('مقبول',this)">مقبول (3)</button>
+  <button class="filter-btn good"      onclick="setFilter('جيد',this)">جيد (2)</button>
+</div>
+
+<!-- الجدول -->
+<div class="table-wrap">
+  <table id="main-table">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">#</th>
+        <th onclick="sortTable(1)">اسم الطالب ↕</th>
+        <th onclick="sortTable(2)">الدرجة ↕</th>
+        <th onclick="sortTable(3)">النسبة المئوية ↕</th>
+        <th onclick="sortTable(4)">التقدير ↕</th>
+      </tr>
+    </thead>
+    <tbody id="table-body"></tbody>
+  </table>
+</div>
+
+<!-- التدخل المبكر -->
+<div class="intervention">
+  <h2>💡 خطة التدخل والدعم</h2>
+  <div class="int-groups">
+    <div class="int-group int-red">
+      <h3>🔴 تدخل فوري — أقل من 30% (18 طالباً)</h3>
+      <ul id="int-red-list"></ul>
+    </div>
+    <div class="int-group int-amber">
+      <h3>🟡 متابعة — 30% إلى 60% (8 طلاب)</h3>
+      <ul id="int-amber-list"></ul>
+    </div>
+    <div class="int-group int-green">
+      <h3>🟢 أداء جيد — 60% فأكثر (2 طلاب)</h3>
+      <ul id="int-green-list"></ul>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const students = [
+  { id:1,  name:'أحمد علي بن أحمد العيسي',         score:12, pct:20, grade:'ضعيف' },
+  { id:2,  name:'احمد حمد حمدان المحياوي',           score:6,  pct:10, grade:'ضعيف' },
+  { id:3,  name:'اسماعيل جبران علي الصامطي',         score:20, pct:33, grade:'ضعيف' },
+  { id:4,  name:'الحسين محمد حسن',                   score:18, pct:30, grade:'ضعيف' },
+  { id:5,  name:'الوليد ابراهيم على معشي',            score:16, pct:27, grade:'ضعيف' },
+  { id:6,  name:'انس عبدالهادي عاطف الشهري',         score:23, pct:38, grade:'ضعيف' },
+  { id:7,  name:'اياد حسن محمد السهيلي',              score:12, pct:20, grade:'ضعيف' },
+  { id:8,  name:'جابر علي بن جابر الشمراني',         score:33, pct:55, grade:'مقبول' },
+  { id:9,  name:'خالد حسن حمزه الاسطى',              score:9,  pct:15, grade:'ضعيف' },
+  { id:10, name:'راكان فهد يحي الزهراني',             score:35, pct:58, grade:'مقبول' },
+  { id:11, name:'ريان علي احمد شيبان',                score:40, pct:67, grade:'جيد' },
+  { id:12, name:'زياد سامي حكمي',                    score:40, pct:67, grade:'جيد' },
+  { id:13, name:'سعد عمار سعد الشمراني',              score:24, pct:40, grade:'ضعيف' },
+  { id:14, name:'سلطان محمد بخيت الزهراني',           score:12, pct:20, grade:'ضعيف' },
+  { id:15, name:'سيف نشمي مسعد العتيبي',              score:26, pct:43, grade:'ضعيف' },
+  { id:16, name:'صالح بن علي بن صالح الراشدي',        score:13, pct:22, grade:'ضعيف' },
+  { id:17, name:'عالي محمد عبدالله القرني',            score:15, pct:25, grade:'ضعيف' },
+  { id:18, name:'عبدالله محمد بن سعد العفاري',         score:18, pct:30, grade:'ضعيف' },
+  { id:19, name:'عمر متعب عمر الشهري',                score:13, pct:22, grade:'ضعيف' },
+  { id:20, name:'مالك فارس صهيب الريحاني',            score:3,  pct:5,  grade:'ضعيف' },
+  { id:21, name:'محمد احمد محمد الشمراني',             score:28, pct:47, grade:'ضعيف' },
+  { id:22, name:'محمد علي غرم الله الشمراني',          score:23, pct:38, grade:'ضعيف' },
+  { id:23, name:'محمد هزاع محمد مبارك',               score:14, pct:23, grade:'ضعيف' },
+  { id:24, name:'مرعي محمد مرعي الحربي',              score:23, pct:38, grade:'ضعيف' },
+  { id:25, name:'معن خالد عبده حمدي',                 score:35, pct:58, grade:'مقبول' },
+  { id:26, name:'يامن حسن يحي غزواني',                score:3,  pct:5,  grade:'ضعيف' },
+  { id:27, name:'يزن خالد حمزه برهومه',               score:4,  pct:7,  grade:'ضعيف' },
+  { id:28, name:'يوسف محمد حسين الناشري',             score:4,  pct:7,  grade:'ضعيف' },
+];
+
+let currentFilter = 'all';
+let sortCol = 0, sortAsc = true;
+
+function gradeClass(g) {
+  return g==='ضعيف'?'badge-weak': g==='مقبول'?'badge-ok': g==='جيد'?'badge-good': g==='جيد جداً'?'badge-vgood':'badge-excellent';
+}
+function barColor(pct) {
+  if (pct >= 60) return '#48bb78';
+  if (pct >= 40) return '#ecc94b';
+  if (pct >= 30) return '#ed8936';
+  return '#fc8181';
+}
+
+function renderTable() {
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  let data = students.filter(s => {
+    const matchFilter = currentFilter==='all' || s.grade===currentFilter;
+    const matchSearch = !q || s.name.includes(q);
+    return matchFilter && matchSearch;
+  });
+
+  if (sortCol === 1) data.sort((a,b) => sortAsc ? a.name.localeCompare(b.name,'ar') : b.name.localeCompare(a.name,'ar'));
+  else if (sortCol === 2) data.sort((a,b) => sortAsc ? a.score-b.score : b.score-a.score);
+  else if (sortCol === 3) data.sort((a,b) => sortAsc ? a.pct-b.pct : b.pct-a.pct);
+  else if (sortCol === 4) data.sort((a,b) => sortAsc ? a.grade.localeCompare(b.grade,'ar') : b.grade.localeCompare(a.grade,'ar'));
+
+  document.getElementById('table-body').innerHTML = data.map((s,i) => `
+    <tr>
+      <td class="rank">${i+1}</td>
+      <td><strong>${s.name}</strong></td>
+      <td>
+        <div class="score-cell">
+          <span class="score-num" style="color:${barColor(s.pct)}">${s.score}</span>
+          <div class="bar-bg"><div class="bar-fill" style="width:${s.pct}%;background:${barColor(s.pct)};"></div></div>
+          <span class="pct">${s.pct}%</span>
+        </div>
+      </td>
+      <td style="text-align:center;">${s.pct}%</td>
+      <td style="text-align:center;"><span class="badge ${gradeClass(s.grade)}">${s.grade}</span></td>
+    </tr>`).join('');
+}
+
+function renderDist() {
+  const dist = [
+    { label:'ضعيف', range:'0 - 29%', count:23, color:'#fc8181', height:90 },
+    { label:'مقبول', range:'30 - 59%', count:3, color:'#ecc94b', height:24 },
+    { label:'جيد', range:'60 - 74%', count:2, color:'#48bb78', height:16 },
+    { label:'جيد جداً', range:'75 - 89%', count:0, color:'#63b3ed', height:4 },
+    { label:'ممتاز', range:'90 - 100%', count:0, color:'#9f7aea', height:4 },
+  ];
+  document.getElementById('dist-bars').innerHTML = dist.map(d => `
+    <div class="dist-bar-wrap">
+      <div class="dist-bar" style="height:${d.height}px;background:${d.color};">${d.count>0?d.count:''}</div>
+      <div class="dist-label">${d.label}</div>
+      <div class="dist-count">${d.range}</div>
+    </div>`).join('');
+}
+
+function renderIntervention() {
+  const red   = students.filter(s => s.pct < 30);
+  const amber = students.filter(s => s.pct >= 30 && s.pct < 60);
+  const green = students.filter(s => s.pct >= 60);
+  document.getElementById('int-red-list').innerHTML   = red.map(s=>`<li>${s.name} <span style="color:#e53e3e;font-weight:700;">(${s.pct}%)</span></li>`).join('');
+  document.getElementById('int-amber-list').innerHTML = amber.map(s=>`<li>${s.name} <span style="color:#d69e2e;font-weight:700;">(${s.pct}%)</span></li>`).join('');
+  document.getElementById('int-green-list').innerHTML = green.map(s=>`<li>${s.name} <span style="color:#38a169;font-weight:700;">(${s.pct}%)</span></li>`).join('');
+}
+
+function filterTable() { renderTable(); }
+
+function setFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTable();
+}
+
+function sortTable(col) {
+  if (sortCol===col) sortAsc=!sortAsc; else { sortCol=col; sortAsc=true; }
+  renderTable();
+}
+
+function exportCSV() {
+  const headers = ['#','اسم الطالب','الدرجة','النسبة المئوية','التقدير'];
+  const rows = students.map((s,i)=>[i+1,s.name,s.score,s.pct+'%',s.grade].map(v=>`"${v}"`).join(','));
+  const csv = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+  a.download = 'كشف_متابعة_يحيى_الشمراني.csv';
+  a.click();
+}
+
+function exportExcel() {
+  const data = students.map((s,i) => ({
+    '#': i+1, 'اسم الطالب': s.name,
+    'الدرجة': s.score, 'من': 60,
+    'النسبة المئوية': s.pct+'%', 'التقدير': s.grade
+  }));
+  const summary = [
+    { 'البيان':'المعلم',         'القيمة':'يحيى الشمراني' },
+    { 'البيان':'المدرسة',        'القيمة':'متوسطة مكة المكرمة' },
+    { 'البيان':'المادة',         'القيمة':'مهارات رقمية' },
+    { 'البيان':'عدد الطلاب',     'القيمة':28 },
+    { 'البيان':'المتوسط الحسابي','القيمة':18.64 },
+    { 'البيان':'معدل النجاح',    'القيمة':'17.9%' },
+    { 'البيان':'أعلى درجة',      'القيمة':40 },
+    { 'البيان':'أدنى درجة',      'القيمة':3 },
+    { 'البيان':'ضعيف',           'القيمة':23 },
+    { 'البيان':'مقبول',          'القيمة':3 },
+    { 'البيان':'جيد',            'القيمة':2 },
+  ];
+  const wb = XLSX.utils.book_new();
+  const ws1 = XLSX.utils.json_to_sheet(summary);
+  ws1['!cols'] = [{wch:20},{wch:24}];
+  const ws2 = XLSX.utils.json_to_sheet(data);
+  ws2['!cols'] = [{wch:4},{wch:32},{wch:10},{wch:8},{wch:14},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,'الملخص',ws1);
+  XLSX.utils.book_append_sheet(wb,'نتائج الطلاب',ws2);
+  XLSX.writeFile(wb,'كشف_متابعة_يحيى_الشمراني.xlsx');
+}
+
+// تشغيل
+renderDist();
+renderTable();
+renderIntervention();
+</script>
+</body>
+</html>
