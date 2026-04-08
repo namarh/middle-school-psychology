@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الخصائص النفسية للمرحلة المتوسطة | يحيى الشمراني</title>
+<meta name="description" content="دليل المعلم التفاعلي — الخصائص النفسية لطلاب 14-16 سنة | يحيى الشمراني | متوسطة مكة المكرمة">
+<meta name="author" content="يحيى الشمراني">
+<meta property="og:title" content="الخصائص النفسية للمرحلة المتوسطة">
+<meta property="og:description" content="عرض تفاعلي لفهم طلاب المرحلة المتوسطة وتوظيف علم النفس التربوي في الفصل">
+<meta property="og:type" content="website">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #0f172a; color: #e2e8f0; direction: rtl; min-height: 100vh; }
+
+/* ترويسة */
+.header {
+  background: linear-gradient(135deg, #1e3a5f 0%, #1a56a0 50%, #0e7490 100%);
+  padding: 28px 40px; text-align: center; position: relative; overflow: hidden;
+}
+.header::before {
+  content: ''; position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.header-content { position: relative; z-index: 1; }
+.header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; color: #fff; }
+.header p  { font-size: 14px; color: rgba(255,255,255,.8); }
+.header-badges { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+.hbadge { background: rgba(255,255,255,.15); backdrop-filter: blur(4px);
+  border: 1px solid rgba(255,255,255,.2); border-radius: 20px;
+  padding: 6px 16px; font-size: 12px; color: #fff; }
+
+/* شريط التنقل */
+.nav { display: flex; background: #1e293b; border-bottom: 1px solid #334155;
+  overflow-x: auto; padding: 0 20px; }
+.nav-btn { padding: 14px 18px; border: none; background: none; color: #94a3b8;
+  font-size: 13px; cursor: pointer; border-bottom: 3px solid transparent;
+  white-space: nowrap; font-family: inherit; transition: all .2s; display: flex; align-items: center; gap: 6px; }
+.nav-btn:hover { color: #e2e8f0; background: rgba(255,255,255,.04); }
+.nav-btn.active { color: #38bdf8; border-bottom-color: #38bdf8; }
+.nav-btn .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; opacity: .6; }
+
+.container { max-width: 1050px; margin: 0 auto; padding: 30px 20px 60px; }
+.screen { display: none; }
+.screen.active { display: block; animation: fadeUp .3s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+
+/* بطاقات المحاور */
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card {
+  background: #1e293b; border-radius: 14px; padding: 22px;
+  border: 1px solid #334155; cursor: pointer; transition: all .25s;
+  position: relative; overflow: hidden;
+}
+.card::before { content: ''; position: absolute; inset: 0; opacity: 0; transition: opacity .25s; border-radius: 14px; }
+.card:hover { transform: translateY(-3px); border-color: #475569; }
+.card:hover::before { opacity: 1; }
+.card.blue::before   { background: linear-gradient(135deg, rgba(56,189,248,.08), transparent); }
+.card.purple::before { background: linear-gradient(135deg, rgba(167,139,250,.08), transparent); }
+.card.green::before  { background: linear-gradient(135deg, rgba(52,211,153,.08), transparent); }
+.card.amber::before  { background: linear-gradient(135deg, rgba(251,191,36,.08), transparent); }
+.card.pink::before   { background: linear-gradient(135deg, rgba(244,114,182,.08), transparent); }
+.card.teal::before   { background: linear-gradient(135deg, rgba(45,212,191,.08), transparent); }
+.card-icon { font-size: 36px; margin-bottom: 12px; }
+.card h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; color: #f1f5f9; }
+.card p  { font-size: 13px; color: #94a3b8; line-height: 1.7; }
+.card-tag { display: inline-block; margin-top: 10px; padding: 3px 12px;
+  border-radius: 20px; font-size: 11px; font-weight: 600; }
+.tag-blue   { background: rgba(56,189,248,.15);  color: #38bdf8; }
+.tag-purple { background: rgba(167,139,250,.15); color: #a78bfa; }
+.tag-green  { background: rgba(52,211,153,.15);  color: #34d399; }
+.tag-amber  { background: rgba(251,191,36,.15);  color: #fbbf24; }
+.tag-pink   { background: rgba(244,114,182,.15); color: #f472b6; }
+.tag-teal   { background: rgba(45,212,191,.15);  color: #2dd4bf; }
+
+/* قسم تفصيلي */
+.detail-section { background: #1e293b; border-radius: 14px; padding: 24px 28px;
+  border: 1px solid #334155; margin-bottom: 20px; }
+.detail-section h2 { font-size: 18px; color: #f1f5f9; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.detail-section .sub { font-size: 13px; color: #64748b; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #334155; }
+
+/* جدول الخصائص */
+.trait-table { width: 100%; border-collapse: collapse; }
+.trait-table th { background: #0f172a; padding: 10px 14px; text-align: right;
+  font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+.trait-table td { padding: 12px 14px; border-bottom: 1px solid #1e293b; font-size: 13px; color: #cbd5e1; }
+.trait-table tr:hover td { background: rgba(255,255,255,.03); }
+.trait-table tr:last-child td { border: none; }
+
+/* قسم الربط بالفصل */
+.classroom-box { background: linear-gradient(135deg, #0c2a4a, #0e3a5e);
+  border: 1px solid #1e4976; border-radius: 12px; padding: 18px 22px; margin-top: 16px; }
+.classroom-box h4 { color: #38bdf8; font-size: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.classroom-box ul { list-style: none; }
+.classroom-box ul li { font-size: 13px; color: #93c5fd; padding: 5px 0;
+  border-bottom: 1px solid rgba(255,255,255,.06); display: flex; align-items: flex-start; gap: 8px; }
+.classroom-box ul li::before { content: '←'; color: #38bdf8; flex-shrink: 0; }
+.classroom-box ul li:last-child { border: none; }
+
+/* شريط التقدم لمؤشرات الطلاب */
+.indicator { margin-bottom: 14px; }
+.indicator .top { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.indicator .lbl { font-size: 13px; color: #cbd5e1; }
+.indicator .val { font-size: 13px; font-weight: 600; }
+.bar-bg  { background: #0f172a; border-radius: 6px; height: 10px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 6px; transition: width 1s ease; }
+
+/* تطابق الفصل */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 20px; }
+.match-card { background: #0f172a; border-radius: 12px; padding: 16px 18px; border: 1px solid #334155; }
+.match-card h4 { font-size: 13px; color: #94a3b8; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid #1e293b; }
+.match-card ul { list-style: none; }
+.match-card ul li { font-size: 12px; color: #cbd5e1; padding: 4px 0; display: flex; gap: 8px; }
+.match-card ul li span.check { color: #34d399; }
+.match-card ul li span.warn  { color: #fbbf24; }
+.match-card ul li span.x     { color: #f87171; }
+
+/* أزرار التنقل */
+.nav-actions { display: flex; justify-content: space-between; margin-top: 24px; }
+.btn { padding: 10px 24px; border: none; border-radius: 8px; cursor: pointer;
+  font-size: 13px; font-family: inherit; font-weight: 600; transition: all .2s; }
+.btn-next { background: #0ea5e9; color: white; }
+.btn-next:hover { background: #0284c7; }
+.btn-prev { background: #1e293b; color: #94a3b8; border: 1px solid #334155; }
+.btn-prev:hover { background: #334155; color: #e2e8f0; }
+.btn-home { background: #1e293b; color: #a78bfa; border: 1px solid #4c1d95; }
+.btn-home:hover { background: #2e1065; }
+
+/* مؤشر المرحلة */
+.stage-indicator { display: flex; justify-content: center; gap: 8px; margin-bottom: 24px; }
+.stage-dot { width: 10px; height: 10px; border-radius: 50%; background: #334155; transition: all .3s; }
+.stage-dot.active { background: #38bdf8; transform: scale(1.3); }
+.stage-dot.done   { background: #0ea5e9; }
+
+/* بطاقة السيناريو */
+.scenario { background: #0f172a; border-radius: 12px; padding: 18px 22px;
+  border-right: 4px solid #a78bfa; margin-bottom: 14px; }
+.scenario .q { font-size: 14px; color: #e2e8f0; font-weight: 600; margin-bottom: 8px; }
+.scenario .a { font-size: 13px; color: #94a3b8; line-height: 1.8; }
+.scenario .highlight { color: #a78bfa; font-weight: 600; }
+
+/* الاستراتيجيات */
+.strategy-list { display: grid; gap: 12px; }
+.strategy { background: #1e293b; border-radius: 10px; padding: 16px 18px;
+  border: 1px solid #334155; display: flex; gap: 14px; align-items: flex-start; }
+.strategy-num { width: 32px; height: 32px; border-radius: 50%; background: #0ea5e9;
+  color: white; display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.strategy-body h4 { font-size: 14px; color: #f1f5f9; margin-bottom: 4px; }
+.strategy-body p  { font-size: 13px; color: #94a3b8; line-height: 1.7; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-content">
+    <h1>🧠 الخصائص النفسية للمرحلة المتوسطة</h1>
+    <p>دليل المعلم التطبيقي لفهم طلاب الفئة العمرية 14–16 سنة</p>
+    <div class="header-badges">
+      <span class="hbadge">👨‍🏫 يحيى الشمراني</span>
+      <span class="hbadge">🏫 متوسطة مكة المكرمة</span>
+      <span class="hbadge">💻 مهارات رقمية</span>
+      <span class="hbadge">👦 أول متوسط</span>
+    </div>
+  </div>
+</div>
+
+<a href="index.html" style="display:flex;align-items:center;gap:8px;padding:10px 20px;background:#0f172a;border-bottom:1px solid #1e293b;font-size:13px;color:#64748b;text-decoration:none;transition:color .2s;" onmouseover="this.style.color='#e2e8f0'" onmouseout="this.style.color='#64748b'">
+  <span style="font-size:16px;">⬡</span> البوابة الرئيسية
+  <span style="margin-right:auto;font-size:11px;background:#1e293b;padding:2px 10px;border-radius:20px;">lesson-presenter</span>
+</a>
+<div class="nav" id="main-nav">
+  <button class="nav-btn active" onclick="goTo(0,this)"><span class="dot"></span>نظرة عامة</button>
+  <button class="nav-btn" onclick="goTo(1,this)"><span class="dot"></span>النمو المعرفي</button>
+  <button class="nav-btn" onclick="goTo(2,this)"><span class="dot"></span>النمو الانفعالي</button>
+  <button class="nav-btn" onclick="goTo(3,this)"><span class="dot"></span>النمو الاجتماعي</button>
+  <button class="nav-btn" onclick="goTo(4,this)"><span class="dot"></span>الدافعية والتحصيل</button>
+  <button class="nav-btn" onclick="goTo(5,this)"><span class="dot"></span>في فصلك</button>
+</div>
+
+<div class="container">
+<div class="stage-indicator" id="stage-indicator">
+  <div class="stage-dot active"></div>
+  <div class="stage-dot"></div>
+  <div class="stage-dot"></div>
+  <div class="stage-dot"></div>
+  <div class="stage-dot"></div>
+  <div class="stage-dot"></div>
+</div>
+
+<!-- الشاشة 0: نظرة عامة -->
+<div class="screen active" id="screen-0">
+  <div class="detail-section">
+    <h2>🌟 من هو طالب المرحلة المتوسطة؟</h2>
+    <p class="sub">المرحلة المتوسطة (12–15 سنة) هي مرحلة انتقالية بالغة الأهمية — يتحول فيها الطفل إلى مراهق، ويشهد تغيرات جذرية في كل الجوانب</p>
+    <div class="cards-grid">
+      <div class="card blue" onclick="goTo(1,null)">
+        <div class="card-icon">🧠</div>
+        <h3>النمو المعرفي</h3>
+        <p>بداية التفكير المجرد، القدرة على الاستنتاج، والتساؤل عن المفاهيم الكبيرة</p>
+        <span class="card-tag tag-blue">اضغط للتفاصيل</span>
+      </div>
+      <div class="card purple" onclick="goTo(2,null)">
+        <div class="card-icon">💭</div>
+        <h3>النمو الانفعالي</h3>
+        <p>تقلبات مزاجية، حساسية مفرطة للنقد، والبحث عن الهوية الشخصية</p>
+        <span class="card-tag tag-purple">اضغط للتفاصيل</span>
+      </div>
+      <div class="card green" onclick="goTo(3,null)">
+        <div class="card-icon">👥</div>
+        <h3>النمو الاجتماعي</h3>
+        <p>تأثير الأقران يتصاعد، الحاجة للانتماء، والتمرد على السلطة</p>
+        <span class="card-tag tag-green">اضغط للتفاصيل</span>
+      </div>
+      <div class="card amber" onclick="goTo(4,null)">
+        <div class="card-icon">🎯</div>
+        <h3>الدافعية والتحصيل</h3>
+        <p>الدافعية الداخلية تتراجع، والمكافآت الفورية أكثر تأثيراً من الأهداف البعيدة</p>
+        <span class="card-tag tag-amber">اضغط للتفاصيل</span>
+      </div>
+      <div class="card teal" onclick="goTo(5,null)">
+        <div class="card-icon">📊</div>
+        <h3>ربط بفصلك</h3>
+        <p>كيف تعكس نتائج طلابك الـ 28 هذه الخصائص النفسية؟</p>
+        <span class="card-tag tag-teal">اضغط للتطبيق</span>
+      </div>
+      <div class="card pink">
+        <div class="card-icon">⚡</div>
+        <h3>أبرز التحديات</h3>
+        <p>معدل النجاح 17.9% في فصلك ليس مشكلة أكاديمية فقط — له جذور نفسية عميقة</p>
+        <span class="card-tag tag-pink">تحليل حالة فصلك</span>
+      </div>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <div></div>
+    <button class="btn btn-next" onclick="goTo(1,null)">التالي: النمو المعرفي ←</button>
+  </div>
+</div>
+
+<!-- الشاشة 1: النمو المعرفي -->
+<div class="screen" id="screen-1">
+  <div class="detail-section">
+    <h2>🧠 النمو المعرفي — مرحلة العمليات الشكلية</h2>
+    <p class="sub">وفق نظرية بياجيه: الطالب في هذه المرحلة يدخل مرحلة "العمليات الشكلية" — أي القدرة على التفكير المجرد لأول مرة في حياته</p>
+    <table class="trait-table">
+      <thead><tr><th>الخاصية</th><th>المظهر السلوكي</th><th>التوظيف التعليمي</th></tr></thead>
+      <tbody>
+        <tr><td>🔍 بداية التفكير المجرد</td><td>يستطيع التفكير في فرضيات لم تحدث</td><td>اطرح أسئلة "ماذا لو؟" في المهارات الرقمية</td></tr>
+        <tr><td>⚡ الانتباه قصير المدى</td><td>التركيز يتراجع بعد 10–15 دقيقة</td><td>قسّم الحصة لأنشطة 10 دقائق مع تحولات</td></tr>
+        <tr><td>🎮 التعلم بالاكتشاف</td><td>يتعلم أفضل بالتجربة لا بالتلقي</td><td>اجعله يكتشف الدالة بنفسه بدل شرحها</td></tr>
+        <tr><td>📱 الميل للتكنولوجيا</td><td>التفاعل الرقمي أسرع من الكتابة</td><td>استثمر هذا الميل في مادة الحاسب مباشرة</td></tr>
+        <tr><td>🤔 التساؤل والشك</td><td>يشكك في المعلومات ويطرح "لماذا؟"</td><td>شجّع التساؤل — لا تعامله كتحدٍّ للسلطة</td></tr>
+        <tr><td>📊 ضعف التخطيط البعيد</td><td>صعوبة ربط الجهد الحالي بالمستقبل</td><td>ربط كل مهارة بفائدة فورية ملموسة</td></tr>
+      </tbody>
+    </table>
+    <div class="classroom-box">
+      <h4>📌 انعكاس ذلك على فصلك — أول متوسط / مهارات رقمية</h4>
+      <ul>
+        <li>الطلاب الذين أنجزوا الواجبات كاملة (ريان وزياد) يتميزون بقدرة تخطيط أعلى من أقرانهم</li>
+        <li>الطلاب الذين لم يبدؤوا الواجبات قد يعانون من ضعف في ربط الجهد بالنتيجة — ليس كسلاً</li>
+        <li>تقسيم مهام الواجب لخطوات صغيرة مع تسليم تدريجي سيرفع نسبة الإنجاز</li>
+        <li>استخدام VEXcode VR وتطبيقات تفاعلية يستثمر ميل المرحلة للتعلم الاكتشافي</li>
+      </ul>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-prev" onclick="goTo(0,null)">→ السابق</button>
+    <button class="btn btn-next" onclick="goTo(2,null)">التالي: النمو الانفعالي ←</button>
+  </div>
+</div>
+
+<!-- الشاشة 2: النمو الانفعالي -->
+<div class="screen" id="screen-2">
+  <div class="detail-section">
+    <h2>💭 النمو الانفعالي — العاصفة الداخلية</h2>
+    <p class="sub">مرحلة المراهقة المبكرة تُعدّ من أكثر المراحل عاطفية حدةً — وفهمها يحوّل المعلم من مصدر توتر إلى مرساة أمان</p>
+    <div class="cards-grid">
+      <div class="card purple">
+        <div class="card-icon">🌊</div>
+        <h3>التقلبات المزاجية</h3>
+        <p>التغيرات الهرمونية تسبب تذبذباً سريعاً بين الفرح والحزن والغضب — أحياناً في نفس الحصة</p>
+        <span class="card-tag tag-purple">التعامل: الهدوء والثبات</span>
+      </div>
+      <div class="card pink">
+        <div class="card-icon">🪞</div>
+        <h3>الحساسية للنقد</h3>
+        <p>أي تعليق سلبي أمام الزملاء يُعدّ كارثة نفسية. النقد العلني يُوقف التعلم تماماً</p>
+        <span class="card-tag tag-pink">التعامل: التغذية الراجعة السرية</span>
+      </div>
+      <div class="card amber">
+        <div class="card-icon">🔥</div>
+        <h3>الحاجة للاستقلالية</h3>
+        <p>يرفض الأوامر المباشرة ويستجيب للخيارات. "افعل كذا" أقل فاعلية من "أيهما تفضل؟"</p>
+        <span class="card-tag tag-amber">التعامل: أعطه خيارات حقيقية</span>
+      </div>
+      <div class="card blue">
+        <div class="card-icon">🏆</div>
+        <h3>الحاجة للإثبات</h3>
+        <p>يريد إثبات كفاءته بشدة — الفشل العلني يُثبّطه لفترة طويلة أكثر مما يُحفّزه</p>
+        <span class="card-tag tag-blue">التعامل: بناء نجاحات صغيرة</span>
+      </div>
+    </div>
+    <div class="classroom-box" style="margin-top:0;">
+      <h4>📌 سيناريوهات من الفصل وكيف تتعامل معها</h4>
+      <ul>
+        <li>طالب رفض تسليم الواجب — ربما خشية الفشل لا كسلاً. ابدأ بسؤال خاص عن العائق</li>
+        <li>طالب ضعيف الدرجات (مالك 3/60، يامن 3/60) — قد يكون في مرحلة انسحاب عاطفي. تواصل شخصي أولاً</li>
+        <li>لا تصحح خطأ الطالب أمام الفصل — استخدم "لاحظت أن..." بدل "أخطأت في..."</li>
+      </ul>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-prev" onclick="goTo(1,null)">→ السابق</button>
+    <button class="btn btn-next" onclick="goTo(3,null)">التالي: النمو الاجتماعي ←</button>
+  </div>
+</div>
+
+<!-- الشاشة 3: النمو الاجتماعي -->
+<div class="screen" id="screen-3">
+  <div class="detail-section">
+    <h2>👥 النمو الاجتماعي — الأقران قبل الكبار</h2>
+    <p class="sub">في هذه المرحلة ينتقل مرجع الطالب من الوالدين والمعلم إلى مجموعة الأقران — وهذا ليس تمرداً بل نمو طبيعي</p>
+
+    <div class="strategy-list">
+      <div class="strategy">
+        <div class="strategy-num">1</div>
+        <div class="strategy-body">
+          <h4>تأثير الأقران قوة تعليمية لا عائق</h4>
+          <p>الطالب يتعلم أسرع من زميله من مجموعته المقربة. العمل التعاوني في مهام الحاسب يستثمر هذا التأثير مباشرة — ضع الطلاب الأقوى مع الأضعف بوعي</p>
+        </div>
+      </div>
+      <div class="strategy">
+        <div class="strategy-num">2</div>
+        <div class="strategy-body">
+          <h4>الخوف من الإحراج أمام الزملاء</h4>
+          <p>الإجابة الخاطئة أمام الفصل تُسبّب ضغطاً اجتماعياً حاداً. استخدم أدوات الإجابة الجماعية (بطاقات، أنظمة تصويت) حتى لا يُحرج طالب واحد</p>
+        </div>
+      </div>
+      <div class="strategy">
+        <div class="strategy-num">3</div>
+        <div class="strategy-body">
+          <h4>الانتماء للمجموعة حاجة أساسية</h4>
+          <p>الطالب الذي يشعر بعدم الانتماء في الفصل ينسحب أكاديمياً. بناء بيئة شاملة حيث كل طالب له دور مرئي يرفع مستوى المشاركة</p>
+        </div>
+      </div>
+      <div class="strategy">
+        <div class="strategy-num">4</div>
+        <div class="strategy-body">
+          <h4>التنافس الصحي محفّز قوي</h4>
+          <p>التنافس بين المجموعات (لا الأفراد) يُحفّز بشدة دون إحراج. لوحة نتائج المجموعات في مادة الحاسب أداة فعّالة جداً مع هذه المرحلة</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="classroom-box" style="margin-top:16px;">
+      <h4>📌 تطبيق على بيانات فصلك</h4>
+      <ul>
+        <li>23 طالباً بتقدير "ضعيف" قد يُشكّلون ثقافة فصل "الفشل طبيعي" — كسر هذا النمط يحتاج نجاحات جماعية مرئية</li>
+        <li>ريان شيبان وزياد حكمي (الأعلى درجات) يمكن توظيفهما كـ "قادة تعلم" في مجموعاتهم</li>
+        <li>جابر الشمراني وراكان الزهراني ومعن حمدي (مقبول) — مجموعة يمكن ترقيتها بدفع اجتماعي بسيط</li>
+      </ul>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-prev" onclick="goTo(2,null)">→ السابق</button>
+    <button class="btn btn-next" onclick="goTo(4,null)">التالي: الدافعية ←</button>
+  </div>
+</div>
+
+<!-- الشاشة 4: الدافعية -->
+<div class="screen" id="screen-4">
+  <div class="detail-section">
+    <h2>🎯 الدافعية والتحصيل — لماذا لا يتعلمون؟</h2>
+    <p class="sub">معدل النجاح 17.9% في فصلك يعكس أزمة دافعية قبل أن تكون أزمة قدرة — وهذا يعني الحل موجود</p>
+
+    <div class="match-grid">
+      <div class="match-card">
+        <h4>🔴 قاتلات الدافعية</h4>
+        <ul>
+          <li><span class="x">✗</span> الروتين الممل في كل حصة</li>
+          <li><span class="x">✗</span> المهام بلا هدف واضح فوري</li>
+          <li><span class="x">✗</span> الإحساس بأن النجاح مستحيل</li>
+          <li><span class="x">✗</span> غياب الاعتراف بالجهد</li>
+          <li><span class="x">✗</span> الدرجة الوحيدة مقياساً للتعلم</li>
+          <li><span class="x">✗</span> عدم الشعور بالكفاءة الذاتية</li>
+        </ul>
+      </div>
+      <div class="match-card">
+        <h4>🟢 محفزات الدافعية</h4>
+        <ul>
+          <li><span class="check">✓</span> التغيير والمفاجأة في الأنشطة</li>
+          <li><span class="check">✓</span> التطبيق على مشكلة حقيقية</li>
+          <li><span class="check">✓</span> النجاحات الصغيرة المتراكمة</li>
+          <li><span class="check">✓</span> الاعتراف بالجهد أمام الأقران</li>
+          <li><span class="check">✓</span> الاستقلالية في اختيار الطريقة</li>
+          <li><span class="check">✓</span> ربط المادة بالتكنولوجيا اليومية</li>
+        </ul>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <h3 style="color:#fbbf24;font-size:15px;margin-bottom:14px;">📊 قراءة نفسية لنتائج فصلك</h3>
+      <div class="indicator">
+        <div class="top"><span class="lbl">طلاب لم يسلّموا أي واجب (صفر كامل)</span><span class="val" style="color:#f87171;">3 طلاب</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:11%;background:#f87171;"></div></div>
+      </div>
+      <div class="indicator">
+        <div class="top"><span class="lbl">طلاب نسبتهم أقل من 20%</span><span class="val" style="color:#fb923c;">8 طلاب</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:29%;background:#fb923c;"></div></div>
+      </div>
+      <div class="indicator">
+        <div class="top"><span class="lbl">طلاب في منطقة التقدم (30-60%)</span><span class="val" style="color:#fbbf24;">8 طلاب</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:29%;background:#fbbf24;"></div></div>
+      </div>
+      <div class="indicator">
+        <div class="top"><span class="lbl">طلاب بأداء جيد (60%+)</span><span class="val" style="color:#34d399;">2 طلاب</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:7%;background:#34d399;"></div></div>
+      </div>
+    </div>
+
+    <div class="classroom-box" style="margin-top:16px;">
+      <h4>💡 التوصية النفسية التطبيقية</h4>
+      <ul>
+        <li>مالك الريحاني ويامن غزواني (3/60) — يحتاجان شعوراً بالكفاءة الذاتية قبل أي محتوى. ابدأ بمهمة صغيرة جداً ينجحان فيها حتماً</li>
+        <li>الطلاب بين 20-40% — في منطقة "اليأس المكتسب" يحتاجون أدلة على قدرتهم أكثر من حاجتهم لمزيد من الشرح</li>
+        <li>خصص دقيقتين في بداية كل حصة لـ "إنجاز الأمس" — ذكّر كل طالب بشيء أجاده في الحصة السابقة</li>
+      </ul>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-prev" onclick="goTo(3,null)">→ السابق</button>
+    <button class="btn btn-next" onclick="goTo(5,null)">التالي: تطبيق في فصلك ←</button>
+  </div>
+</div>
+
+<!-- الشاشة 5: في فصلك -->
+<div class="screen" id="screen-5">
+  <div class="detail-section">
+    <h2>📊 خطة عمل مبنية على الخصائص النفسية — فصلك الفعلي</h2>
+    <p class="sub">ربط نظري-تطبيقي بين ما تعلمناه وواقع الـ 28 طالباً في أول متوسط / مهارات رقمية</p>
+
+    <div class="scenario">
+      <p class="q">🔴 التحدي: معدل نجاح 17.9% — ما التفسير النفسي؟</p>
+      <p class="a">هذا الرقم يعكس <span class="highlight">تراكم الإخفاق</span> لا غياب القدرة. الطالب في المرحلة المتوسطة يبني صورة عن نفسه ("أنا لا أفهم الحاسب") وتصبح هذه الصورة برنامجاً للسلوك. كل درس جديد يؤكد هذه الصورة السلبية ما لم يتدخل المعلم بوعي لكسرها.</p>
+    </div>
+
+    <div class="scenario" style="border-color:#34d399;">
+      <p class="q">🟢 الفرصة: ماذا يخبرنا الطلاب المتفوقون؟</p>
+      <p class="a">ريان شيبان وزياد حكمي حققا <span class="highlight">40/60 (67%)</span> في نفس البيئة. هذا يعني المشكلة ليست في المادة أو المنهج — بل في الاستراتيجية التعليمية والبيئة النفسية لبقية الطلاب. هؤلاء الطالبان نموذج يثبت أن التعلم ممكن.</p>
+    </div>
+
+    <div class="scenario" style="border-color:#fbbf24;">
+      <p class="q">🟡 الخطة: 5 إجراءات نفسية تطبيقية فورية</p>
+      <p class="a"></p>
+    </div>
+
+    <div class="strategy-list" style="margin-top:16px;">
+      <div class="strategy">
+        <div class="strategy-num" style="background:#34d399;">1</div>
+        <div class="strategy-body">
+          <h4>إعادة بناء الكفاءة الذاتية (الأسبوع الأول)</h4>
+          <p>صمم مهمة صغيرة مضمونة النجاح لكل طالب ضعيف. النجاح الأول مهما صغر يفتح الباب النفسي. استخدم قوالب جاهزة جزئياً للطلاب الأضعف (مالك، يامن، يزن، يوسف).</p>
+        </div>
+      </div>
+      <div class="strategy">
+        <div class="strategy-num" style="background:#38bdf8;">2</div>
+        <div class="strategy-body">
+          <h4>التعلم بالأقران (توظيف نمو اجتماعي)</h4>
+          <p>شكّل مجموعات رباعية: طالب متفوق + طالب متوسط + طالبان ضعيفان. المتفوق يتعزز بالتعليم، والضعيف يتعلم من أقرانه بلا إحراج. جرّب هذا في درس Excel القادم.</p>
+        </div>
+      </div>
+      <div class="strategy">
+        <div class="strategy-num" style="background:#a78bfa;">3</div>
+        <div class="strategy-body">
+          <h4>التغذية الراجعة الخاصة لا العلنية</h4>
+          <p>أي تصحيح للطالب الضعيف يكون سراً أو كتابةً. التعليق العلني على الخطأ يُجمّد الطالب نفسياً لأسابيع. استخدم تطبيق Teams لإرسال ملاحظات فردية.</p>
+        </div>
+      </div>
+      <div class="strategy">
+        <div class="strategy-num" style="background:#fbbf24;">4</div>
+        <div class="strategy-body">
+          <h4>الربط الفوري بالحياة اليومية</h4>
+          <p>كل مهارة رقمية تعلّمها اربطها بسؤال: "كيف ستستخدمها اليوم؟" — الطالب في المرحلة المتوسطة لا يصبر على فائدة مستقبلية. مثال: Excel لحساب أموال مصروفه اليومي.</p>
+        </div>
+      </div>
+      <div class="strategy">
+        <div class="strategy-num" style="background:#f472b6;">5</div>
+        <div class="strategy-body">
+          <h4>دقيقتان للاحتفال في نهاية كل حصة</h4>
+          <p>أنهِ كل حصة بسؤال: "من أنجز اليوم شيئاً لم يكن يعرفه قبل الحصة؟" — أعطِ الوقت لمن يرفع يده. هذا الروتين يبني إحساساً تراكمياً بالتقدم ويحارب اليأس المكتسب.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,#0c2a4a,#0e3a5e);border-radius:12px;padding:22px;margin-top:20px;border:1px solid #1e4976;">
+      <h3 style="color:#38bdf8;font-size:15px;margin-bottom:14px;">🗓 جدول التدخل المقترح — شهر واحد</h3>
+      <table class="trait-table" style="background:transparent;">
+        <thead><tr><th>الأسبوع</th><th>الإجراء</th><th>الهدف النفسي</th><th>المقياس</th></tr></thead>
+        <tbody>
+          <tr><td>الأول</td><td>مهام صغيرة مضمونة النجاح</td><td>إعادة الكفاءة الذاتية</td><td>نسبة المشاركة</td></tr>
+          <tr><td>الثاني</td><td>تشكيل مجموعات الأقران</td><td>تعزيز الانتماء</td><td>جودة التفاعل</td></tr>
+          <tr><td>الثالث</td><td>تغذية راجعة فردية لكل طالب</td><td>كسر الخوف من الخطأ</td><td>معدل تسليم الواجبات</td></tr>
+          <tr><td>الرابع</td><td>مشروع تطبيقي جماعي</td><td>الفخر بالإنجاز المشترك</td><td>جودة المشروع + التقييم الذاتي</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="nav-actions">
+    <button class="btn btn-prev" onclick="goTo(4,null)">→ السابق</button>
+    <button class="btn btn-home" onclick="goTo(0,null)">↑ العودة للبداية</button>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<script>
+let current = 0;
+
+function goTo(index, btn) {
+  // إخفاء الشاشة الحالية
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + index).classList.add('active');
+
+  // تحديث أزرار التنقل
+  document.querySelectorAll('.nav-btn').forEach((b, i) => {
+    b.classList.toggle('active', i === index);
+  });
+
+  // تحديث النقاط
+  document.querySelectorAll('.stage-dot').forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i === index) d.classList.add('active');
+    else if (i < index) d.classList.add('done');
+  });
+
+  current = index;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // تأثير أشرطة التقدم في شاشة الدافعية
+  if (index === 4) {
+    setTimeout(() => {
+      document.querySelectorAll('.bar-fill').forEach(b => {
+        const w = b.style.width;
+        b.style.width = '0%';
+        setTimeout(() => { b.style.width = w; }, 50);
+      });
+    }, 200);
+  }
+}
+</script>
+</body>
+</html>

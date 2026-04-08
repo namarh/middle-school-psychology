@@ -1,0 +1,17 @@
+# ملفات النظام
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ملفات المحرر
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ملفات مؤقتة
+*.tmp
+*.log
+
+# ملفات شخصية - لا ترفعها
+*.pdf
